@@ -1,0 +1,23 @@
+﻿# Backups temporarios
+*.bak
+*.tmp
+
+# Arquivos de editor e sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Credenciais e configuracoes locais
+.env
+.env.*
+!.env.example
+
+# Dependencias Node.js
+node_modules/
+
+# Resultados de testes
+test-results/
+playwright-report/
+coverage/
