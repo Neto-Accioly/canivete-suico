@@ -8,7 +8,9 @@ function Get-QASafeSource {
     if ($errors.Count) { throw "Sintaxe invalida em $Path" }
     $functions = @($ast.EndBlock.Statements | Where-Object { $_ -is [Management.Automation.Language.FunctionDefinitionAst] })
     $blocked = @('Invoke-ConsultaWinGet', 'Invoke-InstalacaoNode', 'Invoke-VersaoNode',
-        'Get-RegistrosInstalacao', 'Get-ConsultaWinGet', 'Get-IndiciosNode')
+        'Get-RegistrosInstalacao', 'Get-ConsultaWinGet', 'Get-IndiciosNode',
+        'Invoke-VersaoAmbienteProjeto', 'Invoke-DependenciasProjeto', 'New-PastaProjeto',
+        'Write-ArquivoProjeto', 'Confirm-AcaoProjeto')
     # Se surgir outra invocacao nativa, falhar fechado antes de carregar funcoes.
     foreach ($command in $ast.FindAll({ param($n)
         $n -is [Management.Automation.Language.CommandAst] -and $n.InvocationOperator -eq 'Ampersand'

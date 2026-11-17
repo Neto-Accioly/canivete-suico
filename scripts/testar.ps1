@@ -12,12 +12,20 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
-$protectedPaths = @('scripts/instalar.ps1', 'scripts/verificar.ps1', 'config/ferramentas.json')
+$protectedPaths = @('scripts/instalar.ps1', 'scripts/verificar.ps1', 'scripts/criar-projeto.ps1', 'config/ferramentas.json')
 $before = [ordered]@{}
 $runDirectory = $null
 function Get-QATecnicas {
     param([string]$Caso)
     # Tecnica individual nao altera a classificacao global MOCKADO da suite.
+    if ($Caso -match '^PRJ-(\d{3})\b') {
+        $id = [int]$Matches[1]
+        if ($id -in @(9,10)) { return @('ANALISE_ESTATICA','LEITURA_CONTROLADA') }
+        if ($id -ge 1 -and $id -le 8) { return @('MOCK','LEITURA_ESCRITA_FIXTURE_TEMPORARIA') }
+        if ($id -ge 11 -and $id -le 20) { return @('MOCK') }
+        if ($id -ge 21 -and $id -le 24) { return @('MOCK','LEITURA_ESCRITA_FIXTURE_TEMPORARIA') }
+        throw "Caso PRJ nao mapeado: $Caso"
+    }
     if ($Caso -notmatch '^QA-(\d{3})\b') { throw "Caso sem ID de classificacao: $Caso" }
     $id = [int]$Matches[1]
     if ($id -in @(1, 3, 4)) { return @('ANALISE_ESTATICA', 'LEITURA_CONTROLADA') }
@@ -97,7 +105,8 @@ try {
     $runDirectory = Join-Path $repo "evidencias\execucoes\$runId"
     [void](New-Item -ItemType Directory -Path $runDirectory -Force)
     $xmlPath = Join-Path $runDirectory 'pester.nunit.xml'
-    $result = Invoke-Pester -Script (Join-Path $repo 'tests\QA.Tests.ps1') -PassThru -Quiet -Strict
+    $suites = @((Join-Path $repo 'tests\QA.Tests.ps1'), (Join-Path $repo 'tests\CriarProjeto.Tests.ps1'))
+    $result = Invoke-Pester -Script $suites -PassThru -Quiet -Strict
     Export-QANUnit $result $xmlPath
     $intact = $true
     foreach ($relative in $protectedPaths) {
@@ -106,7 +115,7 @@ try {
     $complete = $result.TotalCount -gt 0 -and $result.FailedCount -eq 0 -and
         $result.SkippedCount -eq 0 -and $result.PendingCount -eq 0 -and $intact
     $hashes = [ordered]@{}
-    foreach ($relative in @($protectedPaths) + @('scripts/testar.ps1', 'tests/QA.Tests.ps1', 'tests/TestSupport.ps1', 'tests/Invoke-SafeScenario.ps1')) {
+    foreach ($relative in @($protectedPaths) + @('scripts/testar.ps1', 'tests/QA.Tests.ps1', 'tests/CriarProjeto.Tests.ps1', 'tests/TestSupport.ps1', 'tests/Invoke-SafeScenario.ps1', 'tests/fixtures/projeto-playwright/package.json')) {
         $hashes[$relative] = (Get-FileHash (Join-Path $repo $relative) -Algorithm SHA256).Hash
     }
     $cases = @($result.TestResult | ForEach-Object {
@@ -160,5 +169,5 @@ catch {
     exit 2
 }
 finally {
-    Remove-Module QaInstalador, QaDiagnostico -ErrorAction SilentlyContinue
+    Remove-Module QaInstalador, QaDiagnostico, QaProjeto, QaProjetoLink -ErrorAction SilentlyContinue
 }

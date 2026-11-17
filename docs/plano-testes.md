@@ -76,9 +76,42 @@ Cada linha herda P e explicita as demais pré-condições. “Esperado” é cri
 | QA-042 | W | Aplicação falsa: sucesso/cancelamento/falha/pendência | Saídas 0/0/1/2 e resultado legível; cancelamento não instala |
 | QA-043 | W | Aplicação com seleção mista, existente ou inconclusiva | Saída 1; nenhuma chamada ao instalador falso |
 
+## Extensão PRJ — Estrutura Básica Comentada
+
+Suíte `tests/CriarProjeto.Tests.ps1`: 24 testes, total 67 com os 43 originais. Tipo global `MOCKADO`; IO/npm/autorização são isolados. TestDrive é temporário, sem escrita no projeto real. Os testes chamam funções instrumentadas, nunca o script original com `-Aplicar`. Destino representa a pasta final, enquanto Nome é apenas metadado.
+
+| ID | Pré-condições | Passos | Resultado esperado |
+| --- | --- | --- | --- |
+| PRJ-001 | M, TestDrive | Nomes reservados/maiúsculos/traversal, destino drive-relativo/UNC e saída da raiz | Rejeição sem escrita |
+| PRJ-002 | M | Simular junction em metadados | Bloqueio sem criar link real |
+| PRJ-003 | M, TestDrive | Planejar projeto novo e interpretar JSON proposto | Sete arquivos básicos; nenhum teste/assertion/solução |
+| PRJ-004 | M, fixture Playwright | Planejar sobre manifesto existente | Preservar metadados/dependências/scripts; propor somente scripts auxiliares ausentes com REVISAR |
+| PRJ-005 | M, TestDrive | Materializar fixture a partir dos modelos; planejar novamente | Sete arquivos MANTER, sem duplicação |
+| PRJ-006 | M, TestDrive | JSON inválido e arquivo ocupando raiz | Falha clara, sem aplicar |
+| PRJ-007 | M, TestDrive | Ler pacote Playwright fictício instalado | Reconhecer versão; apontar dois ausentes, sem npm |
+| PRJ-008 | M | Chamar IO/npm sem mock adicional | BARREIRA_QA |
+| PRJ-009 | Análise estática | Conferir CreateNew, hash antes da troca e File.Replace | Guardas presentes, sem executar escrita real |
+| PRJ-010 | Análise estática/função isolada | Conferir comandos e argumentos npm vazios/suspeitos | Sem Git/init/browsers; ignore-scripts; preservar versão suportada; rejeitar entrada insegura |
+| PRJ-011 | M | Simular por padrão | Zero confirmações, escritas e instalações |
+| PRJ-012 | M | Cancelar autorização de estrutura | Zero escrita/npm |
+| PRJ-013 | M | Autorizar estrutura; pacotes já presentes | Escritas falsas autorizadas; zero reinstalação |
+| PRJ-014 | M | Autorizar estrutura e cancelar dependências | Segunda confirmação separada; zero npm |
+| PRJ-015 | M | Recusar substituição de arquivo diferente | Diff exibido; preservar arquivo e não instalar |
+| PRJ-016 | M | Aprovar substituição individual | Diff e confirmação do arquivo antes da escrita falsa |
+| PRJ-017 | M | Simular falha de IO | Interromper antes de npm; sem limpeza automática |
+| PRJ-018 | M | Simular retorno npm não zero | Falha, sem repetição |
+| PRJ-019 | M | Node/npm inconclusivos | Somente estrutura; dependências exigem revisão |
+| PRJ-020 | M | npm retorna zero sem instalar pacotes simulados | Verificação pendente |
+| PRJ-021 | M, fixture temporária existente | Informar pasta final qa-playwright e Nome igual; ler manifesto, lockfile, node_modules e pacote local | Raiz sem duplicação; estruturas reconhecidas; Playwright detectado; manifesto intacto |
+| PRJ-022 | M, destino temporário inexistente | Planejar projeto com Nome diferente da pasta final | Raiz exatamente Destino; Nome somente em metadados; sete propostas, zero criação |
+| PRJ-023 | M, localização PowerShell em TestDrive | Comparar absoluto, relativo e sub/../ com Nome diferente | Mesma raiz normalizada, independente do cwd .NET e de Nome |
+| PRJ-024 | M | Informar destinos ambíguos, provider, ADS, segmento reservado e raiz de disco | Rejeição sem escrita |
+
+Técnicas PRJ: 001–008 e 021–024 `MOCK`/`LEITURA_ESCRITA_FIXTURE_TEMPORARIA`; 009–010 `ANALISE_ESTATICA`/`LEITURA_CONTROLADA`; 011–020 `MOCK`. As técnicas são descritivas, não cobertura de linhas. Aplicação real, instalação npm real e browsers permanecem não executados pelo recurso.
+
 ## Cenários existentes fora da execução automatizada atual
 
-Os cenários MAN abaixo não integram os 43 testes `MOCKADO`. O registro de WinGet direto de 17/11/2026 é `REAL_CONTROLADO` com grau `RELATADO`, separado do cenário ponta a ponta `-Aplicar`, que permanece `NAO_EXECUTADO` em ambiente real. Um relato não é reprodução independente.
+Os cenários MAN abaixo não integram os testes `MOCKADO`. O registro de WinGet direto de 17/11/2026 é `REAL_CONTROLADO` com grau `RELATADO`, separado do cenário ponta a ponta `-Aplicar`, que permanece `NAO_EXECUTADO` em ambiente real. Um relato não é reprodução independente.
 
 | ID | Pré-condições | Passos propostos | Resultado esperado | Situação |
 | --- | --- | --- | --- | --- |

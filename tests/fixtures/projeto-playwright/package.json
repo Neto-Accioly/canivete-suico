@@ -1,0 +1,8 @@
+{
+  "name": "fixture-playwright-existente",
+  "private": true,
+  "type": "commonjs",
+  "license": "ISC",
+  "scripts": {"test": "echo fixture-sem-testes"},
+  "devDependencies": {"@playwright/test": "^1.65.1"}
+}

@@ -6,5 +6,6 @@ Dados fictícios e mínimos. Não representam instalações reais e não são ev
 - `json-invalido.txt`: conteúdo deliberadamente inválido, mantido fora da extensão `.json`.
 - `winget-cenarios.json`: tabelas sintéticas com versões, ausência e IDs parecidos.
 - `projeto-node/` e `projeto-java/`: manifestos para leitura textual do diagnóstico. Não instalar pacotes, não executar npm nem Maven; versões e POM não servem para build.
+- `projeto-playwright/package.json`: projeto fictício existente para verificar preservação de scripts, tipo, licença e dependências. Não instalar seus pacotes.
 
 Novas fixtures devem remover dados pessoais, tokens, caminhos reais e nomes de máquinas. Não adicionar executáveis, scripts de instalação ou credenciais.
