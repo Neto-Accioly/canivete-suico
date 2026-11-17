@@ -1,0 +1,436 @@
+{
+    "projeto":  "NETO-LAB",
+    "versao_catalogo":  2,
+    "observacoes":  [
+                        "Catálogo de planejamento; não executa instalações nem configura serviços ou projetos.",
+                        "Perfis são seleções independentes, sem herança. A associação está no campo perfis de cada ferramenta; selecionar um perfil não torna seus itens obrigatórios.",
+                        "Obrigatoriedade: recomendada para a base de estudos; opcional para escolhas de trilha, alternativas e necessidades específicas. Nenhum item é obrigatório globalmente.",
+                        "Prioridade: alta para a base; media para práticas de uma trilha; baixa para complementos e alternativas. Prioridade não define ordem de instalação nem resolve dependências.",
+                        "Identificador WinGet null significa não confirmado ou não aplicável. Dependências npm/Maven e módulos PowerShell não são aplicativos WinGet.",
+                        "Métodos: winget, dependencia_npm, dependencia_maven, modulo_powershell, configuracao_projeto ou manual_site_oficial. Configuração de projeto complementa dependências em configuracao_projeto, sem duplicar ferramentas.",
+                        "Tipos: aplicativo_windows, servico, cli, biblioteca_projeto e modulo_powershell. Servidor instalado não comprova serviço configurado ou ativo.",
+                        "Java adota Eclipse Temurin JDK 21 LTS; IntelliJ IDEA adota a edição Community. Essas escolhas podem ser revisadas.",
+                        "O instalador atual continua compatível com os campos existentes, mas não filtra perfis nem instala dependências de projeto; seu funcionamento permanece em simulação."
+                    ],
+    "fontes_winget":  {
+                          "repositorio":  "https://github.com/microsoft/winget-pkgs",
+                          "consultado_em":  "2026-11-17",
+                          "criterio":  "Identificadores confirmados no repositório de manifestos do WinGet; fontes específicas em cada ferramenta."
+                      },
+    "ferramentas":  [
+                        {
+                            "nome":  "Git",
+                            "categoria":  "Controle de versão",
+                            "winget_id":  "Git.Git",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "recomendada",
+                            "descricao":  "Versionamento de código e colaboração por repositórios Git.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/.config/YamlCreate.winget",
+                            "tipo":  "cli",
+                            "prioridade":  "alta",
+                            "perfis":  [
+                                           "essencial",
+                                           "apis-bancos",
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "VS Code",
+                            "categoria":  "Editor de código",
+                            "winget_id":  "Microsoft.VisualStudioCode",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "recomendada",
+                            "descricao":  "Editor para código, scripts e projetos de desenvolvimento e QA.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/.config/YamlCreate.winget",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "alta",
+                            "perfis":  [
+                                           "essencial",
+                                           "apis-bancos",
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "Node.js LTS",
+                            "categoria":  "Ambiente de execução",
+                            "winget_id":  "OpenJS.NodeJS.LTS",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "recomendada",
+                            "descricao":  "Linha LTS do Node.js para executar JavaScript e ferramentas de automação; inclui npm. Dependências de cada projeto são gerenciadas separadamente.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/o/OpenJS/NodeJS/LTS",
+                            "tipo":  "cli",
+                            "prioridade":  "alta",
+                            "perfis":  [
+                                           "essencial",
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "Java JDK LTS",
+                            "categoria":  "Kit de desenvolvimento",
+                            "winget_id":  "EclipseAdoptium.Temurin.21.JDK",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Eclipse Temurin JDK 21 LTS, com execução e compilação Java para projetos e testes da trilha Java.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/e/EclipseAdoptium/Temurin/21/JDK",
+                            "tipo":  "cli",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "Maven",
+                            "categoria":  "Automação de build",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "manual_site_oficial",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Apache Maven para builds e dependências Java. Planejar uso da distribuição binária oficial; identificador WinGet não confirmado.",
+                            "fonte_winget":  null,
+                            "tipo":  "cli",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "IntelliJ IDEA",
+                            "categoria":  "IDE",
+                            "winget_id":  "JetBrains.IntelliJIDEA.Community",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "IDE para desenvolvimento e testes Java; variante planejada: Community.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/j/JetBrains/IntelliJIDEA/Community",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "Postman",
+                            "categoria":  "Cliente de API",
+                            "winget_id":  "Postman.Postman",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Criação de requisições, coleções e testes de APIs.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/p/Postman/Postman",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "Insomnia",
+                            "categoria":  "Cliente de API",
+                            "winget_id":  "Insomnia.Insomnia",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Cliente para explorar e testar APIs; alternativa de estudo ao Postman.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/i/Insomnia/Insomnia/9.2.0/Insomnia.Insomnia.yaml",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "baixa",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "Mockoon",
+                            "categoria":  "Simulação de API",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "manual_site_oficial",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Simulação local de APIs HTTP para estudos e testes. Planejar instalação pelo site oficial; identificador WinGet não confirmado.",
+                            "fonte_winget":  null,
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "MySQL Server",
+                            "categoria":  "Servidor de banco de dados",
+                            "winget_id":  "Oracle.MySQL",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Servidor relacional para práticas de SQL e persistência. Sua configuração de instância e serviço exige planejamento separado da instalação.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/o/Oracle/MySQL",
+                            "tipo":  "servico",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "MySQL Workbench",
+                            "categoria":  "Cliente de banco de dados",
+                            "winget_id":  "Oracle.MySQLWorkbench",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Interface gráfica para modelagem, consultas e administração de bancos MySQL; componente separado do servidor.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/o/Oracle/MySQLWorkbench",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "k6",
+                            "categoria":  "Teste de desempenho",
+                            "winget_id":  "GrafanaLabs.k6",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Execução de testes de carga e desempenho com scripts JavaScript.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/g/GrafanaLabs/k6/1.6.0/GrafanaLabs.k6.installer.yaml",
+                            "tipo":  "cli",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ]
+                        },
+                        {
+                            "nome":  "MongoDB Community Server",
+                            "categoria":  "Servidor de banco de dados",
+                            "winget_id":  "MongoDB.Server",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Servidor de documentos MongoDB Community. Configuração de instância, dados e serviço é uma etapa separada; Compass e mongosh são componentes distintos.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/m/MongoDB/Server/8.2.3/MongoDB.Server.installer.yaml",
+                            "tipo":  "servico",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "MongoDB Compass",
+                            "categoria":  "Cliente de banco de dados",
+                            "winget_id":  "MongoDB.Compass.Full",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Interface gráfica para consultar e explorar MongoDB; não substitui nem comprova instalação do servidor.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/MongoDB/Compass/Full",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "MongoDB Shell (mongosh)",
+                            "categoria":  "Cliente de banco de dados",
+                            "winget_id":  "MongoDB.Shell",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Cliente CLI mongosh para conexão a instâncias MongoDB locais ou remotas; não instala o servidor.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/m/MongoDB/Shell/2.5.10/MongoDB.Shell.installer.yaml",
+                            "tipo":  "cli",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "Cypress",
+                            "categoria":  "Automação de testes",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "dependencia_npm",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Dependência de desenvolvimento local para testes de interface, componentes e APIs. A instalação npm pode baixar o binário próprio do Cypress; não é aplicativo WinGet.",
+                            "fonte_winget":  null,
+                            "tipo":  "biblioteca_projeto",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ],
+                            "pacote":  "cypress",
+                            "escopo_dependencia":  "devDependencies",
+                            "configuracao_projeto":  "Definir cypress.config e testes no repositório conforme a aplicação.",
+                            "fonte_instalacao":  "https://docs.cypress.io/app/get-started/install-cypress"
+                        },
+                        {
+                            "nome":  "JUnit 5",
+                            "categoria":  "Testes unitários Java",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "dependencia_maven",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "JUnit Jupiter da linha 5.x para testes Java. Declarar versão 5.x explicitamente no projeto, sem migrar implicitamente para JUnit 6.",
+                            "fonte_winget":  null,
+                            "tipo":  "biblioteca_projeto",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ],
+                            "pacote":  "org.junit.jupiter:junit-jupiter",
+                            "escopo_dependencia":  "test",
+                            "configuracao_projeto":  "Declarar no pom.xml e configurar execução pelo Maven Surefire compatível com JUnit Platform.",
+                            "fonte_instalacao":  "https://docs.junit.org/5.14.4/overview.html"
+                        },
+                        {
+                            "nome":  "REST Assured",
+                            "categoria":  "Testes de API Java",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "dependencia_maven",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Biblioteca Java para requisições e asserções de APIs HTTP; selecionar versão compatível com o JDK do projeto.",
+                            "fonte_winget":  null,
+                            "tipo":  "biblioteca_projeto",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos",
+                                           "avancado"
+                                       ],
+                            "pacote":  "io.rest-assured:rest-assured",
+                            "escopo_dependencia":  "test",
+                            "configuracao_projeto":  "Declarar no pom.xml e integrar ao framework de testes escolhido.",
+                            "fonte_instalacao":  "https://github.com/rest-assured/rest-assured/wiki/GettingStarted"
+                        },
+                        {
+                            "nome":  "ESLint",
+                            "categoria":  "Qualidade de código",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "dependencia_npm",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Análise estática de JavaScript e, com integrações adequadas, TypeScript. Instalar como dependência local de desenvolvimento.",
+                            "fonte_winget":  null,
+                            "tipo":  "biblioteca_projeto",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "essencial",
+                                           "avancado"
+                                       ],
+                            "pacote":  "eslint",
+                            "escopo_dependencia":  "devDependencies",
+                            "configuracao_projeto":  "Criar eslint.config.js ou formato compatível e definir scripts de lint no package.json.",
+                            "fonte_instalacao":  "https://eslint.org/docs/latest/use/getting-started"
+                        },
+                        {
+                            "nome":  "Prettier",
+                            "categoria":  "Qualidade de código",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "dependencia_npm",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Formatação de código como dependência local de desenvolvimento; versão controlada pelo projeto.",
+                            "fonte_winget":  null,
+                            "tipo":  "biblioteca_projeto",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "essencial",
+                                           "avancado"
+                                       ],
+                            "pacote":  "prettier",
+                            "escopo_dependencia":  "devDependencies",
+                            "configuracao_projeto":  "Definir preferências, arquivos ignorados e scripts de verificação/formatação no projeto.",
+                            "fonte_instalacao":  "https://prettier.io/docs/install"
+                        },
+                        {
+                            "nome":  "SQLite",
+                            "categoria":  "Banco de dados embarcado",
+                            "winget_id":  "SQLite.SQLite",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Neste catálogo representa as ferramentas CLI oficiais, incluindo sqlite3. SQLite é embarcado, sem serviço de servidor; drivers e bibliotecas de cada linguagem são dependências separadas do projeto.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/s/SQLite/SQLite/3.51.1/SQLite.SQLite.installer.yaml",
+                            "tipo":  "cli",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "DBeaver Community",
+                            "categoria":  "Cliente de banco de dados",
+                            "winget_id":  "DBeaver.DBeaver.Community",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Cliente gráfico para bancos relacionais, alternativa ao Workbench conforme o banco utilizado. Drivers podem exigir obtenção e configuração separadas.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/d/DBeaver/DBeaver/Community/5.3.1/DBeaver.DBeaver.Community.yaml",
+                            "tipo":  "aplicativo_windows",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "apis-bancos"
+                                       ]
+                        },
+                        {
+                            "nome":  "Pester",
+                            "categoria":  "Testes de PowerShell",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "modulo_powershell",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Módulo de testes PowerShell obtido na PowerShell Gallery. Selecionar versão compatível com Windows PowerShell 5.1 e controlar seu uso por projeto.",
+                            "fonte_winget":  null,
+                            "tipo":  "modulo_powershell",
+                            "prioridade":  "media",
+                            "perfis":  [
+                                           "avancado"
+                                       ],
+                            "pacote":  "Pester",
+                            "configuracao_projeto":  "Definir testes .Tests.ps1 e versão do módulo requerida; planejar escopo CurrentUser.",
+                            "fonte_instalacao":  "https://pester.dev/docs/introduction/installation"
+                        },
+                        {
+                            "nome":  "Allure Report",
+                            "categoria":  "Relatórios de testes",
+                            "winget_id":  null,
+                            "metodo_instalacao":  "manual_site_oficial",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "Gerador de relatórios de testes. Escolher distribuição e versão no site oficial e conferir seus requisitos de execução; adaptadores dos frameworks são dependências separadas do projeto. ID WinGet não confirmado.",
+                            "fonte_winget":  null,
+                            "tipo":  "cli",
+                            "prioridade":  "baixa",
+                            "perfis":  [
+                                           "avancado"
+                                       ],
+                            "configuracao_projeto":  "Integrar adaptador compatível com o framework para produzir resultados antes de gerar o relatório.",
+                            "fonte_instalacao":  "https://allurereport.org/docs/"
+                        },
+                        {
+                            "nome":  "GitHub CLI",
+                            "categoria":  "Colaboração e repositórios",
+                            "winget_id":  "GitHub.cli",
+                            "metodo_instalacao":  "winget",
+                            "obrigatoriedade":  "opcional",
+                            "descricao":  "CLI gh para trabalhar com repositórios, issues e pull requests do GitHub. Autenticação é uma etapa separada e não é realizada pelo catálogo.",
+                            "fonte_winget":  "https://github.com/microsoft/winget-pkgs/blob/master/manifests/g/GitHub/cli/2.87.3/GitHub.cli.installer.yaml",
+                            "tipo":  "cli",
+                            "prioridade":  "baixa",
+                            "perfis":  [
+                                           "avancado"
+                                       ]
+                        }
+                    ],
+    "perfis":  {
+                   "essencial":  "Base recomendada: Git, editor e Node.js; qualidade de código local opcional para projetos JavaScript.",
+                   "apis-bancos":  "Práticas de APIs e bancos SQL/NoSQL; escolher clientes e servidores conforme o projeto, sem exigir todos.",
+                   "avancado":  "Trilha Java, automação de testes, desempenho, relatórios e ferramentas complementares; selecionar conforme a necessidade."
+               },
+    "classificacao":  {
+                          "prioridades":  [
+                                              "alta",
+                                              "media",
+                                              "baixa"
+                                          ],
+                          "obrigatoriedades":  [
+                                                   "recomendada",
+                                                   "opcional"
+                                               ],
+                          "tipos":  [
+                                        "aplicativo_windows",
+                                        "servico",
+                                        "cli",
+                                        "biblioteca_projeto",
+                                        "modulo_powershell"
+                                    ],
+                          "metodos_instalacao":  [
+                                                     "winget",
+                                                     "dependencia_npm",
+                                                     "dependencia_maven",
+                                                     "modulo_powershell",
+                                                     "configuracao_projeto",
+                                                     "manual_site_oficial"
+                                                 ]
+                      }
+}
