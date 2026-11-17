@@ -1,11 +1,13 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-Gera um plano de instalacao em simulacao, sem executar instaladores.
+Gera um plano em simulacao por padrao; aplicacao opcional somente de Node.js LTS ausente.
 .EXAMPLE
 .\scripts\instalar.ps1 -Todas
 .EXAMPLE
 .\scripts\instalar.ps1 -Perfil apis-bancos
+.EXAMPLE
+.\scripts\instalar.ps1 -Ferramentas 'Node.js LTS' -Aplicar
 .EXAMPLE
 .\scripts\instalar.ps1 -Ferramentas 'Git', 'VS Code'
 .EXAMPLE
@@ -21,6 +23,10 @@ WinGet list usa ID exato. Upgrade e usado apenas sem selecao de pacote,
 para listar; o ID e filtrado em memoria. Nao aceita acordos nem atualiza
 programas. O cliente WinGet pode manter logs/cache das consultas.
 Detectar uma instalacao nao comprova funcionamento nem versao atualizada.
+-Aplicar exige selecao exclusiva de OpenJS.NodeJS.LTS, ausencia confirmada
+no escopo consultado e confirmacao digitada em console interativo.
+Nao implementa upgrades reais. Nao eleva permissoes nem aceita contratos.
+Saida: 0 simulacao/sucesso/cancelamento, 1 bloqueio/falha, 2 verificacao pendente.
 #>
 [CmdletBinding()]
 param(
@@ -30,7 +36,9 @@ param(
     [string[]]$Ferramentas,
 
     [ValidateNotNullOrEmpty()]
-    [string]$Perfil
+    [string]$Perfil,
+
+    [switch]$Aplicar
 )
 
 function Read-Catalogo {
@@ -309,7 +317,7 @@ function Get-EvidenciasArquivos {
 
 function Invoke-ConsultaWinGet {
     param($Caminho, [ValidateSet('Listar', 'Atualizacoes')][string]$Operacao, [string]$Id)
-    # Unico ponto de execucao nativa. Nunca passar ID/query/all a upgrade:
+    # Ponto de consultas nativas. Nunca passar ID/query/all a upgrade:
     # upgrade --id executaria uma atualizacao, mesmo com --disable-interactivity.
     try {
         if ($Operacao -eq 'Listar') {
@@ -487,8 +495,9 @@ function Get-Deteccao {
 }
 
 function Show-Plano {
-    param([object[]]$Itens, $Consulta, $WinGet)
-    Write-Host "`nPLANO DE INSTALACAO - SOMENTE SIMULACAO" -ForegroundColor Cyan
+    param([object[]]$Itens, $Consulta, $WinGet, [switch]$PrepararAplicacao)
+    $modo = if ($PrepararAplicacao) { 'APLICACAO SOLICITADA; AGUARDANDO VALIDACAO E CONFIRMACAO' } else { 'SOMENTE SIMULACAO' }
+    Write-Host "`nPLANO DE INSTALACAO - $modo" -ForegroundColor Cyan
     Write-Host 'Confirmacao por evidencia local ou inventario WinGet; nao valida funcionamento nem atualizacao.'
     foreach ($item in $Itens) {
         $estado = Get-EstadoWinGet $item $WinGet
@@ -507,9 +516,194 @@ function Show-Plano {
         Write-Host "Atualizacao: $($estado.Atualizacao)"
         Write-Host "Plano: $($plano.Acao) - $($plano.Motivo)"
         Write-Host "Fonte da decisao: $($estado.Evidencia)"
+        if ($PrepararAplicacao) {
+            [PSCustomObject]@{ Item = $item; Estado = $estado; Deteccao = $deteccao; Plano = $plano }
+        }
     }
     foreach ($falha in $Consulta.Falhas) { Write-Warning "Falha na deteccao: $falha" }
-    Write-Host "`nSimulacao concluida: $($Itens.Count) ferramenta(s). Nenhuma instalacao executada."
+    if ($PrepararAplicacao) {
+        Write-Host "`nPlanejamento concluido: $($Itens.Count) ferramenta(s). Nenhuma instalacao executada ate aqui."
+    }
+    else { Write-Host "`nSimulacao concluida: $($Itens.Count) ferramenta(s). Nenhuma instalacao executada." }
+}
+
+function Assert-SelecaoAplicacao {
+    param([object[]]$Itens)
+    if ($Itens.Count -ne 1 -or $Itens[0].nome -cne 'Node.js LTS' -or
+        $Itens[0].winget_id -cne 'OpenJS.NodeJS.LTS' -or $Itens[0].metodo_instalacao -ne 'winget') {
+        throw '-Aplicar bloqueado integralmente: selecione somente Node.js LTS (OpenJS.NodeJS.LTS). Nenhuma instalacao parcial e permitida.'
+    }
+}
+
+function Get-PathVerificacao {
+    # Leitura dos valores persistidos; nunca escrever PATH de usuario/maquina.
+    $partes = @(
+        [Environment]::GetEnvironmentVariable('PATH', 'Machine')
+        [Environment]::GetEnvironmentVariable('PATH', 'User')
+        $env:PATH
+    )
+    return (($partes | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) -join ';')
+}
+
+function Get-IndiciosNode {
+    # Procurar tambem fora do PATH antigo. Qualquer indicio bloqueia instalar:
+    # outra linha Node, gerenciadores de versao e aliases nao provam ausencia.
+    $pathAnterior = $env:PATH
+    try {
+        $env:PATH = Get-PathVerificacao
+        foreach ($nome in @('node.exe', 'npm.cmd')) {
+            try {
+                foreach ($cmd in @(Get-Command $nome -CommandType Application -All -ErrorAction Stop)) {
+                    New-Evidencia 'INCONCLUSIVA' '' $cmd.Source 'PATH atual/persistido' 'Comando Node/npm existente; ausencia nao comprovada (inclusive alias WindowsApps).'
+                }
+            }
+            catch [System.Management.Automation.CommandNotFoundException] { }
+            catch { New-Evidencia 'INCONCLUSIVA' '' '' "PATH: $nome" $_.Exception.Message }
+        }
+        $pastas = @($env:ProgramFiles, ${env:ProgramFiles(x86)}) | Where-Object { $_ }
+        $candidatos = @($pastas | ForEach-Object { Join-Path $_ 'nodejs\node.exe' })
+        if ($env:LOCALAPPDATA) { $candidatos += Join-Path $env:LOCALAPPDATA 'Programs\nodejs\node.exe' }
+        foreach ($caminho in $candidatos) {
+            if (Test-Path -LiteralPath $caminho -ErrorAction Stop) {
+                New-Evidencia 'INCONCLUSIVA' '' $caminho 'Diretorio padrao Node.js' 'Arquivo Node existente; nao instalar sobre uma possivel instalacao.'
+            }
+        }
+    }
+    catch { New-Evidencia 'INCONCLUSIVA' '' '' 'Busca complementar Node.js' $_.Exception.Message }
+    finally { $env:PATH = $pathAnterior }
+}
+
+function Get-PlanoNodeAtual {
+    param($Item, $WinGet)
+    $consulta = Get-RegistrosInstalacao
+    $estado = Get-EstadoWinGet $Item $WinGet
+    $WinGet.Estado = $estado
+    $deteccao = Get-Deteccao $Item $consulta $WinGet
+    $extras = @(Get-IndiciosNode)
+    if ($extras.Count) {
+        $deteccao.Evidencias = @($deteccao.Evidencias) + $extras
+        if ($deteccao.Status -ne 'CONFIRMADA') { $deteccao.Status = 'INCONCLUSIVA' }
+    }
+    [PSCustomObject]@{
+        Item = $Item; Estado = $estado; Deteccao = $deteccao
+        Plano = (Get-AcaoPlano $Item $deteccao $estado)
+    }
+}
+
+function Assert-AusenciaNode {
+    param($RegistroPlano)
+    Assert-SelecaoAplicacao @($RegistroPlano.Item)
+    if ($RegistroPlano.Plano.Acao -ne 'INSTALAR' -or
+        $RegistroPlano.Estado.Instalacao -ne 'NAO LOCALIZADA' -or
+        $RegistroPlano.Deteccao.Status -ne 'NAO LOCALIZADA' -or
+        @($RegistroPlano.Deteccao.Evidencias | Where-Object Status -ne 'NAO LOCALIZADA').Count) {
+        throw '-Aplicar bloqueado: Node.js deve estar comprovadamente ausente no escopo consultado. Instalacao existente, atualizacao ou deteccao inconclusiva exige REVISAR.'
+    }
+}
+
+function Confirm-InstalacaoNode {
+    # Sem -Confirm:$false, variavel de ambiente ou resposta automatica.
+    if (-not [Environment]::UserInteractive -or [Console]::IsInputRedirected) {
+        throw 'Confirmacao interativa obrigatoria: execute em terminal com entrada interativa, sem pipe ou redirecionamento.'
+    }
+    $resposta = Read-Host 'Para instalar somente Node.js LTS, digite exatamente INSTALAR OpenJS.NodeJS.LTS (qualquer outra resposta cancela)'
+    return $resposta -ceq 'INSTALAR OpenJS.NodeJS.LTS'
+}
+
+function Invoke-InstalacaoNode {
+    param([string]$CaminhoWinGet)
+    # Unico comando de instalacao. ID/fonte/opcoes fixos, sem argumentos do JSON.
+    # Nao chamar esta funcao em testes: substituir em memoria por um mock.
+    try {
+        & $CaminhoWinGet install --id OpenJS.NodeJS.LTS --exact --source winget --interactive --no-upgrade --skip-dependencies | Out-Host
+        $codigo = $LASTEXITCODE
+        [PSCustomObject]@{ Codigo = $codigo; Erro = '' }
+    }
+    catch { [PSCustomObject]@{ Codigo = $null; Erro = $_.Exception.Message } }
+}
+
+function Invoke-VersaoNode {
+    param([ValidateSet('node.exe', 'npm.cmd')][string]$Nome, [string]$PastaNode)
+    try {
+        $caminho = Join-Path $PastaNode $Nome
+        if ((Test-WindowsApps $caminho) -or -not (Test-Path -LiteralPath $caminho -PathType Leaf -ErrorAction Stop)) {
+            throw "Arquivo real nao localizado: $caminho"
+        }
+        $arquivo = Get-Item -LiteralPath $caminho -ErrorAction Stop
+        if (($arquivo.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Link/reparse point nao validado.' }
+        $saida = @(& $arquivo.FullName --version 2>&1)
+        $codigo = $LASTEXITCODE
+        $versao = ($saida -join "`n").Trim()
+        $padrao = if ($Nome -eq 'node.exe') { '^v\d+\.\d+\.\d+$' } else { '^\d+\.\d+\.\d+(?:-[\w.-]+)?$' }
+        [PSCustomObject]@{ Valida = ($codigo -eq 0 -and $versao -match $padrao); Versao = $versao; Caminho = $caminho; Codigo = $codigo; Erro = '' }
+    }
+    catch { [PSCustomObject]@{ Valida = $false; Versao = ''; Caminho = ''; Codigo = $null; Erro = $_.Exception.Message } }
+}
+
+function Get-VerificacaoNode {
+    param([string]$CaminhoWinGet)
+    $pathAnterior = $env:PATH
+    try {
+        $env:PATH = Get-PathVerificacao
+        $node = Get-Command node.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+        $pasta = if ($node) { Split-Path -Parent $node.Source } else { '' }
+        # npm.cmd evita npm.ps1 e nao exige mudar a politica de execucao.
+        $nodeVersao = Invoke-VersaoNode 'node.exe' $pasta
+        $npmVersao = Invoke-VersaoNode 'npm.cmd' $pasta
+        $lista = Invoke-ConsultaWinGet $CaminhoWinGet 'Listar' 'OpenJS.NodeJS.LTS'
+        $linhas = @(Read-LinhasWinGet $lista.Linhas 'OpenJS.NodeJS.LTS')
+        if (-not $linhas.Count) { $linhas = @(Read-LinhasWinGet $lista.Linhas 'OpenJS.NodeJS.LTS' -Atualizacoes) }
+        $inventarioValido = $lista.Codigo -eq 0 -and -not $lista.Erro -and $linhas.Count -eq 1
+        $concluida = $inventarioValido -and $nodeVersao.Valida -and $npmVersao.Valida -and
+            $linhas[0].Instalada -eq ($nodeVersao.Versao -replace '^v', '')
+        [PSCustomObject]@{
+            Concluida = $concluida; Node = $nodeVersao; Npm = $npmVersao
+            WinGet = $lista; Linhas = $linhas
+        }
+    }
+    finally { $env:PATH = $pathAnterior }
+}
+
+function Invoke-AplicacaoNode {
+    param([object[]]$Itens, [object[]]$Planos, $WinGet)
+    Assert-SelecaoAplicacao $Itens
+    if ($Planos.Count -ne 1) { throw 'Plano de aplicacao deve conter exatamente uma ferramenta.' }
+    Assert-AusenciaNode $Planos[0]
+    if (-not $WinGet.Disponivel -or [string]::IsNullOrWhiteSpace($WinGet.Caminho)) { throw 'WinGet indisponivel; aplicacao bloqueada.' }
+    $atual = Get-PlanoNodeAtual $Itens[0] $WinGet
+    Write-Host "`nPlano revalidado: $($atual.Plano.Acao) | ID: OpenJS.NodeJS.LTS | Fonte: winget"
+    Write-Host "Evidencia: $($atual.Estado.Evidencia)"
+    foreach ($ev in $atual.Deteccao.Evidencias) { Write-Host "Fonte: $($ev.Fonte) | $($ev.Detalhe) | Caminho: $($ev.Caminho)" }
+    Assert-AusenciaNode $atual
+    Write-Host 'Comando previsto: winget install --id OpenJS.NodeJS.LTS --exact --source winget --interactive --no-upgrade --skip-dependencies'
+    Write-Host 'Contratos serao apresentados pelo WinGet/instalador, sem aceite automatico. Upgrades reais nao sao permitidos.'
+    if (-not (Confirm-InstalacaoNode)) {
+        return [PSCustomObject]@{ Status = 'CANCELADO'; CodigoSaida = 0; Detalhe = 'Confirmacao nao fornecida; nenhuma instalacao executada.' }
+    }
+    # Fechar a janela entre a confirmacao e a execucao. --no-upgrade tambem
+    # impede que uma instalacao concorrente seja atualizada pelo WinGet.
+    $ultima = Get-PlanoNodeAtual $Itens[0] $WinGet
+    Assert-AusenciaNode $ultima
+    $execucao = Invoke-InstalacaoNode $WinGet.Caminho
+    Write-Host "Codigo de saida da instalacao: $($execucao.Codigo) | Erro: $($execucao.Erro)"
+    try { $verificacao = Get-VerificacaoNode $WinGet.Caminho }
+    catch {
+        $verificacao = $null
+        Write-Warning "Verificacao nao concluida: $($_.Exception.Message)"
+    }
+    if ($verificacao) {
+        Write-Host "node --version: $($verificacao.Node.Versao) | codigo: $($verificacao.Node.Codigo) | caminho: $($verificacao.Node.Caminho) | erro: $($verificacao.Node.Erro)"
+        Write-Host "npm --version: $($verificacao.Npm.Versao) | codigo: $($verificacao.Npm.Codigo) | caminho: $($verificacao.Npm.Caminho) | erro: $($verificacao.Npm.Erro)"
+        Write-Host "winget list --id OpenJS.NodeJS.LTS --exact: codigo $($verificacao.WinGet.Codigo) | erro: $($verificacao.WinGet.Erro)"
+        foreach ($linha in $verificacao.Linhas) { Write-Host "Inventario: $($linha.Linha)" }
+    }
+    if ($execucao.Erro -or $null -eq $execucao.Codigo -or $execucao.Codigo -notin @(0, 3010, 1641)) {
+        return [PSCustomObject]@{ Status = 'FALHA'; CodigoSaida = 1; Detalhe = 'Instalador falhou ou foi cancelado. Pode haver alteracoes parciais; nao ha repeticao ou remocao automatica.' }
+    }
+    if ($execucao.Codigo -eq 0 -and $verificacao -and $verificacao.Concluida) {
+        return [PSCustomObject]@{ Status = 'SUCESSO'; CodigoSaida = 0; Detalhe = 'Node e npm responderam com versao; Node corresponde ao ID exato no inventario WinGet.' }
+    }
+    [PSCustomObject]@{ Status = 'VERIFICACAO PENDENTE'; CodigoSaida = 2; Detalhe = 'Instalador retornou sucesso ou reinicio necessario, mas a validacao nao esta completa. Abra novo terminal e confira Node, npm e inventario. Nao reinstalar automaticamente.' }
 }
 
 try {
@@ -519,7 +713,8 @@ try {
         throw "Parametros incompativeis: -$($modos -join ', -'). Use apenas um entre -Perfil, -Todas e -Ferramentas."
     }
     $catalogo = Read-Catalogo
-    Write-Host 'NETO-LAB - Catalogo de ferramentas (simulacao)' -ForegroundColor Cyan
+    $modoExecucao = if ($Aplicar) { 'aplicacao restrita solicitada; exige confirmacao' } else { 'simulacao' }
+    Write-Host "NETO-LAB - Catalogo de ferramentas ($modoExecucao)" -ForegroundColor Cyan
     if ($PSBoundParameters.ContainsKey('Perfil')) {
         $selecionadas = @(Select-Perfil -Catalogo $catalogo -Nome $Perfil)
         $perfilExibido = $Perfil.Trim().ToLowerInvariant()
@@ -532,14 +727,20 @@ try {
     }
     if ($selecionadas.Count -eq 0) { Write-Host 'Simulacao cancelada, sem alteracoes.'; return }
     Write-Host "Perfil: $perfilExibido | Ferramentas selecionadas: $($selecionadas.Count)"
+    if ($Aplicar) { Assert-SelecaoAplicacao $selecionadas }
     $consulta = Get-RegistrosInstalacao
     $winget = @{ Disponivel = $false; Motivo = 'Nenhuma ferramenta selecionada usa WinGet.' }
     if (@($selecionadas | Where-Object { $_.metodo_instalacao -eq 'winget' -and $_.winget_id }).Count) {
         $winget = Get-ConsultaWinGet
     }
-    Show-Plano -Itens $selecionadas -Consulta $consulta -WinGet $winget
+    $planos = @(Show-Plano -Itens $selecionadas -Consulta $consulta -WinGet $winget -PrepararAplicacao:$Aplicar)
+    if ($Aplicar) {
+        $resultado = Invoke-AplicacaoNode -Itens $selecionadas -Planos $planos -WinGet $winget
+        Write-Host "Resultado: $($resultado.Status) - $($resultado.Detalhe)"
+        if ($resultado.CodigoSaida -ne 0) { exit $resultado.CodigoSaida }
+    }
 }
 catch {
-    Write-Error "Nao foi possivel gerar o plano: $($_.Exception.Message)" -ErrorAction Continue
+    Write-Error "Nao foi possivel concluir a operacao: $($_.Exception.Message)" -ErrorAction Continue
     exit 1
 }
