@@ -5,12 +5,16 @@ Gera um plano de instalacao em simulacao, sem executar instaladores.
 .EXAMPLE
 .\scripts\instalar.ps1 -Todas
 .EXAMPLE
+.\scripts\instalar.ps1 -Perfil apis-bancos
+.EXAMPLE
 .\scripts\instalar.ps1 -Ferramentas 'Git', 'VS Code'
 .EXAMPLE
 powershell.exe -File .\scripts\instalar.ps1 -Ferramentas "Git, VS Code"
 .NOTES
 Com -File, passe a lista em uma unica string separada por virgulas.
 Chamadas diretas tambem aceitam arrays de strings.
+Use apenas uma selecao: -Perfil, -Todas ou -Ferramentas.
+Perfis sao independentes, sem heranca; membros vem do JSON.
 Sem parametros, apresenta selecao por numeros. Consulta Registro, PATH e
 WinGet em leitura; nao executa os programas detectados para obter versoes.
 WinGet list usa ID exato. Upgrade e usado apenas sem selecao de pacote,
@@ -18,14 +22,15 @@ para listar; o ID e filtrado em memoria. Nao aceita acordos nem atualiza
 programas. O cliente WinGet pode manter logs/cache das consultas.
 Detectar uma instalacao nao comprova funcionamento nem versao atualizada.
 #>
-[CmdletBinding(DefaultParameterSetName = 'Interativo')]
+[CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true, ParameterSetName = 'Todas')]
     [switch]$Todas,
 
-    [Parameter(Mandatory = $true, ParameterSetName = 'Nomes')]
     [ValidateNotNullOrEmpty()]
-    [string[]]$Ferramentas
+    [string[]]$Ferramentas,
+
+    [ValidateNotNullOrEmpty()]
+    [string]$Perfil
 )
 
 function Read-Catalogo {
@@ -68,6 +73,31 @@ function Read-Catalogo {
         $nomes[$chave] = $true
     }
     return $catalogo
+}
+
+function Select-Perfil {
+    param($Catalogo, [string]$Nome)
+    if ($Catalogo.perfis -isnot [PSCustomObject]) {
+        throw 'Catalogo sem objeto perfis valido.'
+    }
+    $disponiveis = @($Catalogo.perfis.PSObject.Properties.Name)
+    $perfilEncontrado = @($disponiveis | Where-Object { $_ -eq $Nome.Trim() })
+    if ($perfilEncontrado.Count -ne 1) {
+        throw "Perfil inexistente: '$Nome'. Perfis disponiveis: $($disponiveis -join ', ')."
+    }
+    foreach ($item in $Catalogo.ferramentas) {
+        if ($item.perfis -isnot [System.Array]) {
+            throw "Ferramenta '$($item.nome)' sem lista perfis valida."
+        }
+        foreach ($membro in $item.perfis) {
+            if ($membro -isnot [string] -or $disponiveis -notcontains $membro) {
+                throw "Referencia de perfil invalida em '$($item.nome)'."
+            }
+        }
+    }
+    $itens = @($Catalogo.ferramentas | Where-Object { $_.perfis -contains $perfilEncontrado[0] })
+    if ($itens.Count -eq 0) { throw "Perfil '$Nome' nao possui ferramentas no catalogo." }
+    return $itens
 }
 
 function Show-Catalogo {
@@ -483,11 +513,25 @@ function Show-Plano {
 }
 
 try {
+    # Validacao explicita permite mensagem em portugues com as opcoes conflitantes.
+    $modos = @('Todas', 'Ferramentas', 'Perfil' | Where-Object { $PSBoundParameters.ContainsKey($_) })
+    if ($modos.Count -gt 1) {
+        throw "Parametros incompativeis: -$($modos -join ', -'). Use apenas um entre -Perfil, -Todas e -Ferramentas."
+    }
     $catalogo = Read-Catalogo
     Write-Host 'NETO-LAB - Catalogo de ferramentas (simulacao)' -ForegroundColor Cyan
-    Show-Catalogo -Itens $catalogo.ferramentas
-    $selecionadas = @(Select-Ferramentas -Itens $catalogo.ferramentas -Nomes $Ferramentas -SelecionarTodas $Todas.IsPresent)
+    if ($PSBoundParameters.ContainsKey('Perfil')) {
+        $selecionadas = @(Select-Perfil -Catalogo $catalogo -Nome $Perfil)
+        $perfilExibido = $Perfil.Trim().ToLowerInvariant()
+        Show-Catalogo -Itens $selecionadas
+    }
+    else {
+        Show-Catalogo -Itens $catalogo.ferramentas
+        $selecionadas = @(Select-Ferramentas -Itens $catalogo.ferramentas -Nomes $Ferramentas -SelecionarTodas $Todas.IsPresent)
+        $perfilExibido = 'nenhum (selecao por nomes, todas ou interativa)'
+    }
     if ($selecionadas.Count -eq 0) { Write-Host 'Simulacao cancelada, sem alteracoes.'; return }
+    Write-Host "Perfil: $perfilExibido | Ferramentas selecionadas: $($selecionadas.Count)"
     $consulta = Get-RegistrosInstalacao
     $winget = @{ Disponivel = $false; Motivo = 'Nenhuma ferramenta selecionada usa WinGet.' }
     if (@($selecionadas | Where-Object { $_.metodo_instalacao -eq 'winget' -and $_.winget_id }).Count) {
