@@ -65,11 +65,65 @@ Evidência derivada: [registro sanitizado do relato](../evidencias/resumos/20261
 
 **A rotina `scripts/instalar.ps1 -Aplicar` não foi usada nesse procedimento e continua sem validação real ponta a ponta.** Seus 43 testes automatizados permanecem `MOCKADO`, com os mesmos artefatos e resultados anteriores.
 
-## Não executado pela suíte / não validado em execução real
+## Estrutura Básica Comentada — execuções observadas
 
-Instalação real pela rotina `-Aplicar`; upgrades e remoções reais; confirmação física e tratamento de EULA/UAC/reboot pela rotina; testes em Pester 4/5 e outros ambientes. Os cenários `-Aplicar` desta suíte usam somente mocks isolados. O relato separado de WinGet direto não valida essas etapas do script.
+As execuções abaixo acrescentam 20 casos PRJ aos 43 originais. São **MOCKADO**, com criação e npm falsos; fixtures são gravadas apenas no TestDrive temporário. Nenhum script foi chamado com `-Aplicar` e nenhuma dependência foi instalada.
 
-Esses cenários têm tipo `NAO_EXECUTADO` em execução real pela suíte. Há um registro externo `REAL_CONTROLADO` com grau `RELATADO`, acima; ele não é evidência independente nem muda a classificação dos testes automatizados.
+| Execução | Data/hora São Paulo | Resultado comprovado por artefato | Evidência |
+| --- | --- | --- | --- |
+| `20261117-170822514-f6d9c32b` | 17/11/2026 17:08:22.514 −03:00 | 63 casos, 54 aprovados e 9 falhos. Os 43 originais passaram; um defeito de nome em maiúsculas e oito problemas de isolamento dos mocks PRJ | [Resumo reprovado](../evidencias/resumos/20261117-170822514-f6d9c32b.json) |
+| `20261117-170957796-626fc625` | 17/11/2026 17:09:57.796 −03:00 | 63 casos, 58 aprovados e 5 falhos. Restavam problemas no encaminhamento de mocks de Test-Path (PathType nulo) | [Resumo reprovado](../evidencias/resumos/20261117-170957796-626fc625.json) |
+| `20261117-171159317-0cdeda5b` | 17/11/2026, horário identificado no diretório local | Execução interrompida durante diagnóstico de lentidão, sem relatório final utilizável. Não há aprovação nem contagem final reconstruída | Diretório local de execução sem resumo/XML; interrupção observada na sessão |
+| `20261117-171430336-2439193e` | 17/11/2026 17:14:30.336 −03:00 | **63/63 aprovados**, zero falhos, pendentes ou ignorados. PowerShell 5.1.26100.9818, Pester 3.4.0, 64 bits. Arquivos protegidos preservados | [Resumo aprovado](../evidencias/resumos/20261117-171430336-2439193e.json) |
+
+Correções: comparação de nome passou a ser sensível a maiúsculas; o cenário sintético de junction passou a usar módulo próprio, sem contaminar leitores dos outros casos. As confirmações falsas foram reinicializadas por etapa. Registros DEF-008 e DEF-009. Um diagnóstico auxiliar da suíte PRJ foi interrompido sem relatório agregado; não foi contado como aprovação. XML/JSON originais locais foram preservados; cópias revisadas não contêm caminhos pessoais. As fontes novas não estavam commitadas: commit de origem não comprovado (`null`).
+
+### Projeto existente: simulação somente leitura
+
+Registro **OBS-PLAYWRIGHT-EXISTENTE-20261117**, tipo `REAL_CONTROLADO` limitado a **leitura e simulação**, não instalação. Foi executado o script sem `-Aplicar`, com `-Tipo playwright-typescript -Nome qa-playwright -Destino C:\Dev`, saída **0 / SIMULACAO**. O planejamento exibiu revisão de `package.json` e criação de seis arquivos básicos; nenhuma ação foi aplicada.
+
+Leitura confirmou Playwright `1.65.1`, declarado como `^1.65.1`, manifesto, lockfile e node_modules existentes; TypeScript e `@types/node` não foram localizados como pacotes locais. Node `26.13.1` e npm foram localizados no caminho padrão. Diretórios `chromium-1255` e `chromium_headless_shell-1255` foram observados no cache, sem executar navegadores ou confirmar compatibilidade.
+
+Antes/depois, **196 arquivos** do projeto produziram o mesmo SHA256 agregado `A4B18719B030F9CE1077E9932EAA56E585D22161E0840EC089337F72333603D6`. O agregado usa caminhos relativos ordenados e o hash de cada arquivo. A [evidência revisada](../evidencias/resumos/20261117-playwright-simulacao-existente.json) inclui hash da transcrição local ignorada pelo Git e do script usado. Não é validação do caminho real de escrita/npm.
+
+## Correção de Destino final — DEF-010
+
+O usuário relatou que `-Nome qa-playwright -Destino "C:\Dev\qa-playwright"` resultava na raiz duplicada `C:\Dev\qa-playwright\qa-playwright`. A inspeção confirmou a composição anterior entre pasta-base e Nome. A correção torna Destino a pasta final, sem concatenação, e aceita caminhos relativos normalizados pela localização PowerShell. Os exemplos anteriores com pasta-base descrevem o contrato antigo; seus artefatos não foram reescritos.
+
+Execução **`20261117-172726440-979f713b`**, início **17/11/2026 17:27:26.440 −03:00**, tipo **MOCKADO**: **67/67 aprovados**, zero falhos, pendentes ou ignorados; PowerShell 5.1.26100.9818, Pester 3.4.0, 64 bits. Inclui 43 casos originais e 24 PRJ, sendo quatro regressões novas de raiz final, projeto novo e validação/normalização. [Resumo revisado](../evidencias/resumos/20261117-172726440-979f713b.json). As fontes eram da cópia de trabalho, sem commit de origem comprovado.
+
+Registro de simulação **OBS-PLAYWRIGHT-DESTINO-FINAL-20261117**, tipo `REAL_CONTROLADO` limitado a leitura/simulação. Executado sem `-Aplicar`, com `-Tipo playwright-typescript -Nome qa-playwright -Destino "C:\Dev\qa-playwright"`; saída **0 / SIMULACAO**. A raiz exibida foi exatamente `C:\Dev\qa-playwright`. `package.json`, `package-lock.json` e `node_modules` foram reconhecidos nessa raiz, e Playwright foi detectado como `1.65.1`, declarado `^1.65.1`, sem reinstalação.
+
+O plano manteve somente propostas: revisar o manifesto e criar os seis arquivos ausentes. Os **196 arquivos** conservaram o SHA256 agregado `A4B18719B030F9CE1077E9932EAA56E585D22161E0840EC089337F72333603D6` antes/depois. Nenhum arquivo ou diretório foi aplicado pelo recurso. [Evidência sanitizada](../evidencias/resumos/20261117-playwright-destino-final-simulacao.json); transcrição original local ignorada pelo Git. Instalar/verificar e catálogo foram preservados. Não houve instalação, commit ou push.
+
+## Aplicação parcial de criar-projeto relatada — REAL_CONTROLADO
+
+Registro **REAL-20261117-CRIAR-PROJETO-APLICAR**, data informada **17/11/2026**, horário não fornecido. Tipo **REAL_CONTROLADO**, grau de comprovação **RELATADO pelo usuário**, sem log, captura ou transcrição anexados. O assistente não reproduziu a aplicação nem consultou/modificou o projeto do aluno nesta etapa documental.
+
+Comando informado:
+
+```powershell
+.\scripts\criar-projeto.ps1 -Tipo playwright-typescript -Nome qa-playwright -Destino "C:\Dev\qa-playwright" -Aplicar
+```
+
+| Etapa | Informação recebida |
+| --- | --- |
+| Autorização de estrutura | Usuário digitou `CRIAR ESTRUTURA qa-playwright` |
+| Substituição do manifesto | Usuário respondeu `NAO`, recusando substituir `package.json` |
+| Resultado | `ARQUIVOS_PRESERVADOS; DEPENDENCIAS_NAO_EXECUTADAS` |
+| Verificação posterior | Usuário informou `Test-Path` confirmando os seis arquivos abaixo |
+
+Presenças relatadas: `README.md`, `tests/README.md`, `docs/README.md`, `playwright.config.ts`, `tsconfig.json` e `.gitignore`. São **seis confirmações de presença**, não uma contagem de criações emitida pelo script nem uma verificação independente de conteúdo. A preservação de `package.json` é relatada pela recusa e pelo resultado; não foi fornecida comparação byte a byte.
+
+O procedimento cobre **aplicação parcial de estrutura com preservação do manifesto**. Não cobre substituição autorizada, instalação npm, browsers ou execução de testes do aluno. O resultado indica que npm não foi executado; não presumir que houve uma terceira pergunta de autorização. Nenhum código de saída numérico foi fornecido, mesmo que a análise do código preveja um retorno para esse ramo. Horário, commit, hash do script efetivamente executado e hashes anteriores do projeto permanecem não comprovados. Não reaproveitar hashes das simulações anteriores como baseline dessa aplicação.
+
+[Resumo sanitizado do relato](../evidencias/resumos/20261117-criar-projeto-aplicacao-relato.json). As melhorias **MEL-001** (contagens por ação) e **MEL-002** (diff legível do manifesto) foram registradas como pendentes, não implementadas. Os 43 casos originais e os 24 PRJ continuam `MOCKADO`, com seus resultados históricos preservados; a suíte não foi reexecutada para esta mudança exclusivamente documental.
+
+## Não executado pela suíte / não validado em execução real independente
+
+Instalação real pelo `-Aplicar` de `instalar.ps1`; instalação de dependências pelo npm de `criar-projeto.ps1`; substituição autorizada de manifesto; upgrades e remoções reais; tratamento de EULA/UAC/reboot; testes em Pester 4/5 e outros ambientes. Os cenários automatizados de `-Aplicar` usam somente mocks isolados. O relato novo cobre criação parcial de estrutura e recusa do manifesto, não as demais etapas.
+
+Esses cenários têm tipo `NAO_EXECUTADO` em execução real pela suíte. Os registros externos `REAL_CONTROLADO` com grau `RELATADO` não são reprodução independente nem mudam a classificação dos testes automatizados.
 
 ## Modelo para nova execução
 

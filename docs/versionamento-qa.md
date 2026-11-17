@@ -1,66 +1,92 @@
-# Preparação para versionamento de QA
+# Preparação para versionamento da Estrutura Básica Comentada
 
-Revisão documental de 2026-11-17. Nenhum commit, push, instalação ou alteração de produção foi executado nesta preparação. Os arquivos seguros abaixo foram revisados como candidatos; não foram adicionados ao índice.
+Revisão de 17/11/2026. Nenhum commit, push, instalação ou alteração de produção foi executado nesta preparação. Somente este guia foi atualizado; os candidatos abaixo não foram adicionados ao índice.
 
-## Evidência conferida
+## Evidências conferidas
 
-Execução `20261117-155843943-58008942`, iniciada às **15:58:43.943 −03:00**. XML e JSON indicam os mesmos **43 testes isolados aprovados**, sem falhas, pendências ou ignorados. PowerShell 5.1.26100.9818, Pester 3.4.0, processo 64 bits, Windows runtime 10.0.26300.0.
+A execução `20261117-172726440-979f713b` é **MOCKADO, 67/67 aprovados**, sem falhas, ignorados ou pendentes: 43 casos QA e 24 casos PRJ. A classificação global inclui mocks de operações externas, análise estática e leitura controlada; não comprova instalação real. Ambiente registrado: PowerShell 5.1.26100.9818, Pester 3.4.0, processo de 64 bits.
 
-As interações externas do instalador foram substituídas por mocks/barreiras; o diagnóstico lê fixtures. Isso não comprova instalação real, versão real de programas, confirmação física ou UI/EULA/UAC.
+JSON e XML originais concordam com o [resumo revisado](../evidencias/resumos/20261117-172726440-979f713b.json). Os hashes de ambos os originais e das dez fontes registradas foram conferidos. As fontes testadas permanecem iguais; não foi necessário repetir a suíte. Os originais permanecem locais, inalterados e ignorados em `evidencias/execucoes/`. As execuções anteriores, inclusive falhas, permanecem históricas.
 
-O hash do XML confere com o resumo. Os sete hashes de fontes conferem com os arquivos atuais, portanto não houve necessidade de executar novamente `scripts/testar.ps1`. O [resumo derivado](../evidencias/resumos/20261117-155843943-58008942.json) preserva os resultados e acrescenta proveniência e hashes dos dois originais; o XML e o JSON originais continuam inalterados em `evidencias/execucoes/`, ignorados pelo Git.
+**Commit de origem não comprovado: `null`.** A correspondência por SHA256 não atribui retroativamente a execução ao HEAD ou a um commit futuro.
 
-**Commit de origem: não comprovado (`null`).** O relatório não registrou commit. Os testes/runner ainda não estão rastreados e `scripts/instalar.ps1` possui alterações anteriores não commitadas. Os SHA256 comprovam a correspondência atual dos arquivos, não a existência de um commit contendo toda a execução. Não atribuir o resultado ao HEAD, ao commit futuro de QA nem inferir o contexto da execução pelo horário da revisão.
+DEF-010 está coberto por PRJ-021 a PRJ-024: destino absoluto final sem duplicar Nome, projeto novo, caminho relativo e caminhos inseguros. Código, testes e documentação usam Destino como pasta final; Nome é identificação/metadados.
 
-## Arquivos revisados seguros para uma futura publicação
+A aplicação em qa-playwright de 17/11/2026 é **REAL_CONTROLADO / RELATADO**, registrada no [resumo do relato](../evidencias/resumos/20261117-criar-projeto-aplicacao-relato.json). A mensagem do usuário informa confirmação de criação, recusa de substituição de package.json, `ARQUIVOS_PRESERVADOS; DEPENDENCIAS_NAO_EXECUTADAS` e seis presenças posteriores via Test-Path. Não há log bruto anexado, código de saída comprovado, hashes anteriores nem validação independente nesta revisão. Não inferir contagem de arquivos efetivamente criados apenas da presença posterior.
 
-Lista explícita para revisão antes de uma eventual adição ao índice:
+**MEL-001 e MEL-002 continuam PENDENTE — somente registrado**: contagem de criados/preservados e diff legível do package.json. Não são funcionalidades entregues neste lote.
 
-```text
-.gitignore
-AGENTS.md
-README.md
-scripts/testar.ps1
-tests/QA.Tests.ps1
-tests/TestSupport.ps1
-tests/Invoke-SafeScenario.ps1
-tests/fixtures/README.md
-tests/fixtures/catalogo-minimo.json
-tests/fixtures/json-invalido.txt
-tests/fixtures/winget-cenarios.json
-tests/fixtures/projeto-node/package.json
-tests/fixtures/projeto-java/pom.xml
-docs/qa.md
-docs/plano-testes.md
-docs/historico-execucoes.md
-docs/defeitos.md
-docs/versionamento-qa.md
-evidencias/README.md
-evidencias/resumos/README.md
-evidencias/resumos/20261117-154901824-e02807e8.json
-evidencias/resumos/20261117-154951182-4a307157.json
-evidencias/resumos/20261117-155843943-58008942.json
-evidencias/resumos/20261117-161114058-8591ed63.json
-evidencias/resumos/20261117-node-lts-winget-direto-relato.json
+## Lista explícita e divisão proposta
+
+São 23 candidatos: 12 modificados e 11 novos (contando a fixture como arquivo). Arquivos já versionados e inalterados não precisam ser adicionados novamente. Os comandos abaixo são propostas para autorização posterior, não foram executados. Executar na raiz do repositório, revisando cada índice antes do respectivo commit.
+
+### 1. Funcionalidade
+
+```powershell
+git add -- scripts/criar-projeto.ps1
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "feat: adiciona estrutura comentada Playwright com destino final"
 ```
 
-Os caminhos `C:\fixture` nos testes são sintéticos; exemplos `C:\Dev` no README são genéricos, sem nome pessoal. As fixtures são dados fictícios e não executáveis. Resumos incluem somente ambiente mínimo, casos e hashes; não incluem PATH, contas, máquina, erros brutos ou stacktraces. Logs brutos e originais não fazem parte desta lista.
+O script preserva simulação padrão, confirmações separadas para criação e npm, proteção de projetos existentes e escopo didático: o aluno escreve seus testes. Não inicializa Git nem gera testes resolvidos. A aprovação mockada não substitui validação real de todos os caminhos de aplicação.
 
-Após esta preparação, a padronização de tipos modificou o gerador e o teste QA-001. A execução mais recente é `20261117-161114058-8591ed63`, **MOCKADO, 43/43**. Os resumos antigos preservam os resultados históricos, com classificação retrospectiva somente nas cópias revisadas. Não usar seus hashes para afirmar que as fontes novas foram testadas naquela data; consultar o histórico e o resumo novo.
+### 2. Testes, fixture e plano
 
-O registro posterior de WinGet direto de 17/11/2026 é `REAL_CONTROLADO` com grau `RELATADO`, baseado na mensagem do usuário; não possui log bruto anexado e não comprova a execução de `-Aplicar`. É um registro externo à suíte Pester e não altera os 43 testes.
+```powershell
+$testes = @(
+    'scripts/testar.ps1'
+    'tests/CriarProjeto.Tests.ps1'
+    'tests/TestSupport.ps1'
+    'tests/fixtures/projeto-playwright/package.json'
+    'tests/fixtures/README.md'
+    'docs/plano-testes.md'
+)
+git add -- $testes
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "test: cobre estrutura comentada e regressao DEF-010"
+```
 
-## Fora deste lote
+A fixture é sintética; não é cópia do projeto do aluno. A suíte QA original permanece preservada. O runner inclui os novos casos e mantém as barreiras de operações externas.
 
-- `scripts/instalar.ps1`: diff de produção preexistente, preservado. A suíte depende das funções de aplicação Node contidas nessa cópia de trabalho; é necessária revisão separada desse diff antes de publicar uma revisão que se pretenda reproduzível. Não incluí-lo automaticamente no lote de QA.
-- `scripts/verificar.ps1` e `config/ferramentas.json`: preservados, já rastreados, sem mudança nesta preparação.
-- Tudo em `evidencias/execucoes/`: originais e históricos locais, nunca forçar inclusão.
-- Logs, transcrições, `.env`, relatórios XML brutos e quaisquer arquivos pessoais: manter locais e ignorados.
+### 3. Documentação e resumos sanitizados
 
-## Checagens antes de publicar
+```powershell
+$documentacao = @(
+    'AGENTS.md'
+    'README.md'
+    'docs/criar-projeto.md'
+    'docs/defeitos.md'
+    'docs/historico-execucoes.md'
+    'docs/qa.md'
+    'docs/versionamento-qa.md'
+    'evidencias/README.md'
+    'evidencias/resumos/README.md'
+    'evidencias/resumos/20261117-170822514-f6d9c32b.json'
+    'evidencias/resumos/20261117-170957796-626fc625.json'
+    'evidencias/resumos/20261117-171430336-2439193e.json'
+    'evidencias/resumos/20261117-172726440-979f713b.json'
+    'evidencias/resumos/20261117-playwright-simulacao-existente.json'
+    'evidencias/resumos/20261117-playwright-destino-final-simulacao.json'
+    'evidencias/resumos/20261117-criar-projeto-aplicacao-relato.json'
+)
+git add -- $documentacao
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "docs: registra evidencias e limites da estrutura comentada"
+git status -sb
+```
 
-1. Conferir `git status -sb`, `git diff --stat` e a lista acima. `git diff --stat` não inclui arquivos ainda não rastreados, mas inclui o diff anterior de produção.
-2. Verificar regras de ignore e que nenhum bruto já esteja rastreado. `.gitignore` não remove dados do histórico nem protege arquivos já rastreados.
-3. Revisar a lista exata a adicionar, sem `git add .`, sem `-f` e sem ações automáticas de commit/push.
-4. Resolver a dependência do diff de produção em revisão separada. Esta preparação não declara a suíte aprovada para o HEAD atual isoladamente.
-5. Depois de uma mudança funcional, executar a suíte segura e registrar nova evidência. Apenas documentação sem mudança nas fontes testadas não exige repetir uma execução consistente.
+## Privacidade e exclusões
+
+A inspeção dos candidatos e a busca por caminhos de perfil pessoal e padrões comuns de credenciais não identificaram dados sensíveis. Os resumos publicados usam dados mínimos e sanitizados; não incluem os logs brutos. Exemplos de caminhos e fixtures dos testes não representam arquivos do aluno. Essa revisão não é garantia universal de detecção de segredos; revisar o diff exato antes de publicar.
+
+`.gitignore` mantém originais de execução, logs, temporários, .env, node_modules e relatórios brutos fora do lote. Não foram encontrados brutos ou arquivos do projeto do aluno entre os arquivos rastreados/candidatos. Os originais JSON/XML da execução aprovada estão ignorados e seus hashes conferem. Nunca usar `git add .` nem forçar arquivos ignorados. Ignore não protege arquivos já rastreados.
+
+`scripts/instalar.ps1`, `scripts/verificar.ps1` e `config/ferramentas.json` estão sem diff e ficam fora deste lote. `.gitignore` já está versionado e não precisou mudar. O projeto externo qa-playwright não foi alterado nesta preparação.
+
+`git diff --stat` mostra apenas mudanças rastreadas; os arquivos novos aparecem em `git status -sb` e só entrarão no diff do índice após autorização de staging. Nenhum arquivo foi staged nesta revisão. Os commits propostos dependem da sequência funcionalidade, testes e documentação; não realizar push sem autorização.

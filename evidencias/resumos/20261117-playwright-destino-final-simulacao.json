@@ -1,0 +1,47 @@
+{
+    "registro":  "OBS-PLAYWRIGHT-DESTINO-FINAL-20261117",
+    "data":  "2026-11-17",
+    "tipo_execucao":  "REAL_CONTROLADO",
+    "operacao":  "SIMULACAO_SOMENTE_LEITURA_COM_DESTINO_FINAL",
+    "grau_comprovacao":  "OBSERVADO_NA_SESSAO_COM_TRANSCRICAO_LOCAL",
+    "projeto":  "qa-playwright",
+    "comando_normalizado":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/criar-projeto.ps1 -Tipo playwright-typescript -Nome qa-playwright -Destino \u003cpasta-final-do-projeto\u003e",
+    "codigo_saida":  0,
+    "resultado":  "SIMULACAO; destino final sem acrescentar Nome; nenhum arquivo criado ou substituido",
+    "estruturas_reconhecidas":  {
+                                    "package_json":  true,
+                                    "package_lock_json":  true,
+                                    "node_modules":  true,
+                                    "playwright_instalado":  "1.65.1",
+                                    "playwright_declarado":  "^1.65.1"
+                                },
+    "plano":  {
+                  "REVISAR":  [
+                                  "package.json"
+                              ],
+                  "CRIAR":  [
+                                "README.md",
+                                "tests/README.md",
+                                "docs/README.md",
+                                "playwright.config.ts",
+                                "tsconfig.json",
+                                ".gitignore"
+                            ]
+              },
+    "integridade":  {
+                        "arquivos":  196,
+                        "sha256_agregado_antes":  "A4B18719B030F9CE1077E9932EAA56E585D22161E0840EC089337F72333603D6",
+                        "sha256_agregado_depois":  "A4B18719B030F9CE1077E9932EAA56E585D22161E0840EC089337F72333603D6",
+                        "metodo":  "Linhas de caminhos relativos ordenados + | + SHA256 de cada arquivo, unidas por LF"
+                    },
+    "proveniencia":  {
+                         "commit_origem":  null,
+                         "script_sha256":  "44A383463BBA958DE80DCF001B885F4CCD30D1E6FA2ED53207A8B850B6781EF4",
+                         "transcricao_local_sha256":  "72AE04ABFB3452EF5C0C3F9A39E1DDFE2FCE1F291F8843551885DE91699FD0EC"
+                     },
+    "limites":  [
+                    "Nao executou -Aplicar nem instalacao de dependencias",
+                    "Nao valida caminho de escrita ou npm reais",
+                    "Caminho absoluto normalizado para publicacao; transcricao original somente local"
+                ]
+}

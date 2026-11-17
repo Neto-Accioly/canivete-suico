@@ -1,0 +1,53 @@
+{
+    "registro":  "OBS-PLAYWRIGHT-EXISTENTE-20261117",
+    "data":  "2026-11-17",
+    "tipo_execucao":  "REAL_CONTROLADO",
+    "operacao":  "SIMULACAO_SOMENTE_LEITURA_EM_PROJETO_EXISTENTE",
+    "grau_comprovacao":  "OBSERVADO_NA_SESSAO_COM_TRANSCRICAO_LOCAL",
+    "projeto":  "qa-playwright",
+    "comando_normalizado":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/criar-projeto.ps1 -Tipo playwright-typescript -Nome qa-playwright -Destino \u003cpasta-base\u003e",
+    "codigo_saida":  0,
+    "resultado":  "SIMULACAO; nenhuma alteracao aplicada",
+    "plano":  {
+                  "REVISAR":  [
+                                  "package.json"
+                              ],
+                  "CRIAR":  [
+                                "README.md",
+                                "tests/README.md",
+                                "docs/README.md",
+                                "playwright.config.ts",
+                                "tsconfig.json",
+                                ".gitignore"
+                            ]
+              },
+    "ambiente":  {
+                     "node":  "26.13.1",
+                     "npm_localizado":  true,
+                     "playwright_declarado":  "^1.65.1",
+                     "playwright_instalado":  "1.65.1",
+                     "typescript_local":  false,
+                     "types_node_local":  false,
+                     "navegadores_indicios":  [
+                                                  "chromium-1255",
+                                                  "chromium_headless_shell-1255"
+                                              ]
+                 },
+    "integridade":  {
+                        "arquivos":  196,
+                        "sha256_agregado_antes":  "A4B18719B030F9CE1077E9932EAA56E585D22161E0840EC089337F72333603D6",
+                        "sha256_agregado_depois":  "A4B18719B030F9CE1077E9932EAA56E585D22161E0840EC089337F72333603D6",
+                        "metodo":  "SHA256 das linhas relativas ordenadas: caminho relativo + | + SHA256 de cada arquivo; unidas por LF"
+                    },
+    "proveniencia":  {
+                         "commit_origem":  null,
+                         "script_sha256":  "FE56F0A357FDCD54A844AEFD84022F8869F9A2B36444548FF6BA54C5AE7872C4",
+                         "transcricao_local_sha256":  "421CB52D720DDDC787ADEF9C9C74A825092507944E40BAB569DA3F7E0577EC34"
+                     },
+    "limites":  [
+                    "Nao executou -Aplicar, npm install, Git init ou navegadores",
+                    "Diretorios de cache nao comprovam browsers executaveis ou compativeis",
+                    "Nao valida criacao real nem instalacao real de dependencias",
+                    "Comando publico normalizado para nao registrar caminhos locais"
+                ]
+}

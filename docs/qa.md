@@ -23,7 +23,7 @@ O runner retorna `0` quando todos os testes passam e os arquivos de produção m
 
 | `tipo_execucao` | Critério |
 | --- | --- |
-| `MOCKADO` | Execução isolada; operações externas substituídas por mocks/barreiras. Pode incluir verificações estáticas, execução de funções e leitura controlada de arquivos reais. Não valida instalação real. É a classificação global dos 43 testes atuais. |
+| `MOCKADO` | Execução isolada; operações externas substituídas por mocks/barreiras. Pode incluir verificações estáticas, execução de funções e leitura controlada de arquivos reais. Não valida instalação real. É a classificação global da suíte: 43 casos originais e 24 casos PRJ. |
 | `REAL_CONTROLADO` | Execução contra componentes reais em ambiente/escopo controlado e autorizado, com evidências. Não significa necessariamente instalação; exige registrar quais operações reais ocorreram. A suíte atual não produz este tipo. |
 | `MANUAL` | Caso executado por uma pessoa, com passos, ambiente, resultado e evidências registrados. Um relato isolado não comprova execução manual. |
 | `NAO_EXECUTADO` | Cenário não realizado; não possui resultado de aprovação nem evidência de execução. |
@@ -85,6 +85,12 @@ Para cada mudança funcional: atualize casos e fixtures pertinentes, execute a s
 Mantenha IDs existentes; acrescente novos IDs para novos comportamentos. As contagens 25/5/13/15 são contratos da versão atual do catálogo: uma expansão autorizada exige atualizar o catálogo, os testes e o plano juntos. As rotinas de produção foram preservadas nesta entrega.
 
 ## Limites atuais
+
+### Extensão de estrutura comentada
+
+`tests/CriarProjeto.Tests.ps1` contém 24 casos `PRJ-001` a `PRJ-024` junto aos 43 casos originais: total **67**, todos globalmente `MOCKADO`. PRJ-021 a PRJ-024 cobrem a regressão de Destino final, projeto novo e normalização de caminhos. Os testes usam fixtures temporárias controladas, leitura de arquivos e mocks de escrita, confirmação e npm; o arquivo de produção não é executado com `-Aplicar`. As barreiras adicionais são `New-PastaProjeto`, `Write-ArquivoProjeto`, `Confirm-AcaoProjeto`, `Invoke-DependenciasProjeto` e `Invoke-VersaoAmbienteProjeto`.
+
+O runner executa as duas suítes e inclui o gerador de projeto e suas fontes/fixtures nos hashes. Os resumos antigos de 43 casos permanecem históricos, sem reescrita ou aprovação transferida. Para a semântica do recurso e autorizações, consulte [criar projeto](criar-projeto.md).
 
 Para preparar uma publicação, siga [versionamento de QA](versionamento-qa.md). O resumo das 15:58 foi conferido na revisão anterior; a mudança posterior do gerador e do teste de contrato exigiu uma nova execução `MOCKADO`. As evidências continuam vinculadas aos respectivos SHA256, sem commit de origem comprovado; não transferir aprovação antiga para fontes alteradas.
 

@@ -1,0 +1,54 @@
+{
+  "registro": "REAL-20261117-CRIAR-PROJETO-APLICAR",
+  "data_execucao_informada": "2026-11-17",
+  "horario": null,
+  "tipo_execucao": "REAL_CONTROLADO",
+  "grau_comprovacao": "RELATADO",
+  "fonte": "Mensagem do usuario nesta conversa; sem logs, capturas ou transcricao anexados",
+  "projeto": "qa-playwright",
+  "comando_normalizado": "scripts/criar-projeto.ps1 -Tipo playwright-typescript -Nome qa-playwright -Destino <pasta-final-do-projeto> -Aplicar",
+  "respostas_informadas": {
+    "criacao_estrutura": "CRIAR ESTRUTURA qa-playwright",
+    "substituicao_package_json": "NAO"
+  },
+  "resultado_informado": "ARQUIVOS_PRESERVADOS; DEPENDENCIAS_NAO_EXECUTADAS",
+  "codigo_saida": null,
+  "verificacao_posterior_informada": {
+    "metodo": "Test-Path executado pelo usuario, conforme relato",
+    "arquivos_com_presenca_confirmada": [
+      "README.md",
+      "tests/README.md",
+      "docs/README.md",
+      "playwright.config.ts",
+      "tsconfig.json",
+      ".gitignore"
+    ],
+    "quantidade_presencas_reportadas": 6,
+    "contagem_criados_emitida_pelo_script": null
+  },
+  "package_json": {
+    "substituicao_autorizada": false,
+    "preservacao": "Informada pelo resultado; sem comparacao de conteudo ou hashes antes/depois fornecidos"
+  },
+  "dependencias": {
+    "instalacao": "NAO_EXECUTADO conforme resultado informado",
+    "validacao_npm_real_pelo_recurso": false
+  },
+  "tecnicas": ["APLICACAO_INTERATIVA_RELATADA", "VERIFICACAO_PRESENCA_RELATADA"],
+  "proveniencia": {
+    "commit_origem": null,
+    "hash_script_executado": null,
+    "hashes_anteriores_projeto": null,
+    "artefatos_brutos_fornecidos": false,
+    "reproducao_independente_nesta_entrega": false,
+    "caminho_destino": "Normalizado para publicacao; caminho informado consta do historico documental"
+  },
+  "melhorias_pendentes": ["MEL-001", "MEL-002"],
+  "limites": [
+    "Test-Path relatado confirma presenca, nao conteudo nem atribuicao independente de criacao",
+    "Sem horario, codigo de saida numerico, log ou hashes de antes/depois informados",
+    "Nao usar hashes de simulacoes anteriores como baseline desta aplicacao",
+    "Nao comprova fluxo de substituicao autorizada, instalacao npm, navegadores ou execucao dos testes do aluno",
+    "Nao altera resultados nem classificacao dos testes MOCKADO; nenhum novo teste foi executado nesta documentacao"
+  ]
+}

@@ -1,6 +1,8 @@
 # Trabalho e QA neste repositório
 
 - Preserve alterações do usuário. Não faça commit ou push sem autorização.
+- Escopo didático: o Canivete prepara ambiente/estrutura; o aluno cria testes, cenários e assertions. Em criar-projeto, não gerar .spec.ts, Page Objects ou exercícios resolvidos. Não usar -Aplicar real nem npm install durante desenvolvimento/testes; manter IO/npm atrás das barreiras do módulo QaProjeto.
+- Em criar-projeto, Destino sempre representa a pasta final. Nome é somente identificação/metadados: nunca concatená-lo ao caminho. Resolva relativos pela localização PowerShell e preserve o projeto existente nesse destino.
 - Ao modificar funcionalidades, atualize os casos correspondentes em `docs/plano-testes.md`, os testes em `tests/` e o registro em `docs/historico-execucoes.md`. Registre defeitos reproduzidos em `docs/defeitos.md`; não declare correção sem regressão.
 - Leia `docs/qa.md` antes de executar a suíte. Use `scripts/testar.ps1` com Pester local; não instale dependências automaticamente.
 - Nunca execute instalações reais, upgrades, remoções ou `-Aplicar` não instrumentado para validar alterações. Nos testes, mantenha as barreiras nativas de `tests/TestSupport.ps1` e os mocks isolados do worker.

@@ -1,0 +1,527 @@
+{
+    "execucao":  "20261117-170957796-626fc625",
+    "inicio_utc":  "2026-11-17T20:09:57.7963069+00:00",
+    "inicio_sao_paulo":  "2026-11-17T17:09:57.7963069-03:00",
+    "duracao_segundos":  18.682,
+    "ambiente":  {
+                     "powershell":  "5.1.26100.9818",
+                     "pester":  "3.4.0",
+                     "windows_runtime":  "10.0.26300.0",
+                     "processo_bits":  64
+                 },
+    "tipo_execucao":  "MOCKADO",
+    "tipo":  "Execucao isolada: mocks nas operacoes externas, analise estatica e leitura controlada de arquivos; nenhuma instalacao real",
+    "resultado":  "REPROVADO_OU_INCOMPLETO",
+    "total":  63,
+    "aprovados":  58,
+    "falhos":  5,
+    "ignorados":  0,
+    "pendentes":  0,
+    "producao_preservada":  true,
+    "arquivos_sha256":  {
+                            "scripts/instalar.ps1":  "3515DC782A07E9D4EA70C8BB2018A9776EB49C1CAD09A70DB7451E2D84C75D3D",
+                            "scripts/verificar.ps1":  "FBBCE7A963501253975A935F4040C76B7B13ECAAB0A997E2D07A76A803D4E9F8",
+                            "scripts/criar-projeto.ps1":  "FE56F0A357FDCD54A844AEFD84022F8869F9A2B36444548FF6BA54C5AE7872C4",
+                            "config/ferramentas.json":  "4BD98F70DDA4E8EA328FBA2409CFACF47B6B35536AB104B9FB303A9D87CEDDD6",
+                            "scripts/testar.ps1":  "F076139EF58A4B97D67518B6E3B106A79964B480291EBFA044AAF6854E31C16B",
+                            "tests/QA.Tests.ps1":  "E31684336EF77B2CCB1A0693E1365ADA0455880CF494EF765D85F4D4705DA78D",
+                            "tests/CriarProjeto.Tests.ps1":  "4A0C1AAF67E702B5EA267AE07415D1093B04F2BADFCF1222F7D8BFD7D6B17201",
+                            "tests/TestSupport.ps1":  "D4DA325BF44F9935399F8F75C939BD0DD9BC582A4E50603D6E02FBD527BB1292",
+                            "tests/Invoke-SafeScenario.ps1":  "AE796586A3B7542F4E1FE8055366D713782E51E49CA31D7C5EDD47DCF3063F9A",
+                            "tests/fixtures/projeto-playwright/package.json":  "9E429C47068193AC27AE18874E1DBF289044559E864BDDEDA8C7F8F493D2C8F4"
+                        },
+    "nunit_sha256":  "72A98C1533C45068539ADD447FBC848E72D1E2210BF62C5F6DB98D1EFDBB8D1C",
+    "casos":  [
+                  {
+                      "caso":  "QA-001 scripts e testes possuem sintaxe PowerShell valida",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "ANALISE_ESTATICA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-002 barreira nativa rejeita instalar consultar e executar versoes sem mock",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "BARREIRA_SEGURANCA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-003 chamada install e fixa sem upgrade forca silencio ou aceite automatico",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "ANALISE_ESTATICA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-004 upgrade nao recebe ID query all ou force",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "ANALISE_ESTATICA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-005 catalogo real tem 25 nomes unicos e nove IDs null",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-006 Read-Catalogo aceita fixture com ID null",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-007 catalogo inexistente ou JSON invalido e rejeitado",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-008 campo ausente e nome duplicado sao rejeitados",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-009 selecao individual array CSV espacos e duplicatas",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-010 nomes desconhecidos e elementos vazios sao rejeitados",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-011 Todas preserva os 25 itens",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-012 perfil essencial seleciona somente cinco membros",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-013 perfil apis-bancos seleciona somente treze membros",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-014 perfil avancado seleciona somente quinze membros",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-015 perfil desconhecido e referencia invalida sao rejeitados",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-016 tabelas com um espaco sao interpretadas pelo ID exato",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-017 versao instalada e atualizacao disponivel geram ATUALIZAR",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-018 lista completa sem atualizacao do ID gera MANTER",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-019 consulta falha versao desconhecida e fonte indisponivel geram REVISAR",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-020 ausencia sem evidencia local gera INSTALAR e conflito local gera REVISAR",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-021 atualizacoes de Java MySQL e MongoDB exigem revisao manual",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-022 bibliotecas npm Maven e modulo PowerShell nao consultam WinGet",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-023 WindowsApps isolado nao confirma instalacao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-024 VS Code do usuario e localizado por metadados e caminho padrao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-025 selecao mista e IDs nao autorizados sao bloqueados integralmente",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-026 Node existente ou inconclusivo bloqueia antes da confirmacao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-027 cancelamento nao chama instalador nem verificacao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-028 sucesso exige confirmacao duas revalidacoes e verificacao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-029 falha do instalador nao e mascarada por verificacao positiva",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-030 retorno zero sem verificacao completa gera pendencia",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-031 reinicio necessario permanece pendente",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-032 mudanca apos confirmacao bloqueia instalacao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-033 node npm e inventario sao verificados e PATH restaurado",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "AMBIENTE_PROCESSO_TEMPORARIO"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-034 versoes divergentes impedem sucesso",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "AMBIENTE_PROCESSO_TEMPORARIO"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-035 excecao restaura PATH",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "AMBIENTE_PROCESSO_TEMPORARIO"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-036 projeto nao informado e caminho inexistente tem status distintos",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-037 dependencias Node sao declaracoes sem executar npm",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-038 Java apresenta indicios textuais sem executar Maven",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "FUNCAO_ISOLADA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-039 single multiple array Todas e interativo preservados",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "PROCESSO_FILHO_INSTRUMENTADO",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-040 tres perfis exibem nome e contagem correta",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "PROCESSO_FILHO_INSTRUMENTADO",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-041 seletores conflitantes perfil e ferramenta invalidos retornam erro",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "PROCESSO_FILHO_INSTRUMENTADO",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-042 Aplicar instrumentado retorna sucesso cancelamento falha ou pendencia",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "PROCESSO_FILHO_INSTRUMENTADO",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "QA-043 Aplicar misto existente ou inconclusivo nao chama instalador falso",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "PROCESSO_FILHO_INSTRUMENTADO",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-001 nomes e destinos invalidos sao rejeitados",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-002 junctions sao rejeitadas sem criar links reais",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-003 somente sete arquivos basicos sem exercicios sao propostos",
+                      "resultado":  "Failed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-004 package existente preserva metadados dependencias e script do aluno",
+                      "resultado":  "Failed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-005 segunda execucao nao duplica arquivos nem muda plano igual",
+                      "resultado":  "Failed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-006 manifestos invalidos e colisoes arquivo-pasta bloqueiam",
+                      "resultado":  "Failed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-007 Playwright instalado e detectado por leitura sem npm",
+                      "resultado":  "Failed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-008 IO e npm permanecem bloqueados sem mock",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK",
+                                       "LEITURA_ESCRITA_FIXTURE_TEMPORARIA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-009 guardas de escrita protegem arquivo novo e alterado apos diff",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "ANALISE_ESTATICA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-010 comandos nao inicializam Git nem instalam browsers e ignoram lifecycle",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "ANALISE_ESTATICA",
+                                       "LEITURA_CONTROLADA"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-011 simulacao nunca confirma escreve ou instala",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-012 cancelamento da estrutura impede qualquer escrita ou npm",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-013 criacao autorizada nao reinstala dependencia presente",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-014 dependencia exige autorizacao separada e pode ser cancelada",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-015 recusar substituicao preserva arquivo e bloqueia npm",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-016 aceitar substituicao exige diff e aprovacao individual",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-017 falha de escrita interrompe antes de npm",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-018 falha npm e reportada sem repeticao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-019 sem Node/npm confirmado cria apenas estrutura e pede revisao",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  },
+                  {
+                      "caso":  "PRJ-020 npm zero sem pacotes locais gera verificacao pendente",
+                      "resultado":  "Passed",
+                      "tecnicas":  [
+                                       "MOCK"
+                                   ]
+                  }
+              ],
+    "limites":  [
+                    "WinGet/Registro/PATH simulados; nao comprova estado do computador",
+                    "Instalacao real nao executada; confirmacao fisica e UI/EULA nao exercitadas",
+                    "Worker usa bloco principal instrumentado; nao e execucao direta do instalador",
+                    "Pester 3/4; outros ambientes requerem nova validacao"
+                ],
+    "proveniencia":  {
+                         "commit_origem":  null,
+                         "resumo_original_sha256":  "EC2F605CD9F8C2219A130301693D7240137BAE9AB12EB630FC9F0D3D958B5575",
+                         "xml_original_sha256":  "72A98C1533C45068539ADD447FBC848E72D1E2210BF62C5F6DB98D1EFDBB8D1C",
+                         "tipo_evidencia":  "Execucao MOCKADO com artefatos locais; novas fontes nao commitadas; nenhuma aplicacao real",
+                         "originais_preservados":  true
+                     }
+}

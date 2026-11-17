@@ -79,6 +79,16 @@ Melhorias na identificação de versões, na descoberta de instalações e na an
 
 ## Desenvolvimento e QA
 
+O recurso [Estrutura Básica Comentada de Playwright + TypeScript](docs/criar-projeto.md) propõe somente pastas, README e configurações: **Canivete prepara o ambiente; aluno cria os testes**.
+
+```powershell
+.\scripts\criar-projeto.ps1 -Tipo playwright-typescript -Nome qa-playwright -Destino "C:\Dev\qa-playwright"
+```
+
+Sem `-Aplicar`, é somente simulação. Criação, substituição individual após diff e instalação de dependências têm autorizações distintas. Não gera exercícios prontos nem inicializa Git. A aplicação real desse recurso não foi validada.
+
+`-Destino` é a pasta **final**, absoluta ou relativa à localização atual do PowerShell. `-Nome` é identificação/metadados e não é acrescentado ao caminho. Projeto existente é analisado nessa mesma pasta, sem sobrescrita automática.
+
 Execute a suíte segura com `.\scripts\testar.ps1`, usando Pester local compatível. O runner não instala módulos nem programas. Não execute `-Aplicar` real para testar alterações.
 
 - [Guia didático de QA](docs/qa.md): ambiente, isolamento, relatórios e limites.
