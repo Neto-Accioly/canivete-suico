@@ -2,7 +2,7 @@
 
 O Canivete Suíço é um utilitário de diagnóstico do NETO-LAB, voltado à organização e à verificação de um ambiente de estudos e práticas de desenvolvimento e garantia da qualidade de software (QA). Ajuda a identificar ferramentas disponíveis no Windows e a distinguir aplicativos do ambiente das dependências declaradas em cada projeto.
 
-**O projeto está em desenvolvimento. O instalador automático ainda não foi implementado.** O diagnóstico consulta informações e apresenta resultados; não instala programas, altera configurações do Windows ou inicia serviços.
+**O projeto está em desenvolvimento.** O diagnóstico `scripts/verificar.ps1` consulta informações e apresenta resultados; não instala programas, altera configurações do Windows ou inicia serviços. Separadamente, `scripts/instalar.ps1` simula planejamento por padrão e possui aplicação real restrita ao Node.js LTS ausente, mediante confirmação interativa. Essa instalação real ainda não foi validada; os testes de aplicação usam somente mocks isolados.
 
 ## Requisitos
 
@@ -75,4 +75,20 @@ O valor `-` indica informação não obtida ou não verificada, inclusive versõ
 - **GitHub Actions:** somente a existência da pasta `.github\workflows` é verificada; seus arquivos e sua validade não são analisados.
 - **Escopo:** não há busca recursiva por subprojetos. Erros de acesso são apresentados como falhas de consulta. O relatório é exibido no terminal, sem exportação estruturada ou código de saída específico para falhas do diagnóstico.
 
-Melhorias na identificação de versões, na descoberta de instalações e na análise das dependências ficam para etapas futuras. Nenhuma instalação automática está disponível nesta versão.
+Melhorias na identificação de versões, na descoberta de instalações e na análise das dependências do diagnóstico ficam para etapas futuras. O planejamento e a aplicação restrita do instalador são fluxos separados; nenhuma atualização real é implementada.
+
+## Desenvolvimento e QA
+
+Execute a suíte segura com `.\scripts\testar.ps1`, usando Pester local compatível. O runner não instala módulos nem programas. Não execute `-Aplicar` real para testar alterações.
+
+- [Guia didático de QA](docs/qa.md): ambiente, isolamento, relatórios e limites.
+- [Plano com IDs e resultados esperados](docs/plano-testes.md).
+- [Histórico de execuções](docs/historico-execucoes.md) e [registro de defeitos](docs/defeitos.md).
+- [Política de evidências](evidencias/README.md) e [dados fictícios de teste](tests/fixtures/README.md).
+- [Preparação para versionamento de QA](docs/versionamento-qa.md): lista revisada e proveniência.
+
+A execução `20261117-155843943-58008942` registrou **43 testes isolados aprovados**, com mocks nos pontos de interação externa. O [resumo revisado](evidencias/resumos/20261117-155843943-58008942.json) identifica as fontes por SHA256; não há commit de origem comprovado. O resultado não comprova instalação real nem execução contra o HEAD.
+
+Após padronizar a classificação, a [execução 20261117-161114058-8591ed63](evidencias/resumos/20261117-161114058-8591ed63.json) aprovou os **43 testes**, globalmente `MOCKADO`. A suíte combina mocks de operações externas, análise estática e leitura controlada; as técnicas individuais são registradas separadamente. Os demais tipos previstos são `REAL_CONTROLADO`, `MANUAL` e `NAO_EXECUTADO`.
+
+Ao modificar funcionalidades, mantenha testes e registros correspondentes. Relatórios brutos ficam ignorados; somente resumos revisados podem ser versionados. Nenhum commit/push é automático.

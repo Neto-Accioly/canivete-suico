@@ -1,0 +1,7 @@
+<project>
+  <!-- Somente dados textuais de teste; nao executar Maven. -->
+  <dependencies>
+    <dependency><groupId>org.seleniumhq.selenium</groupId><artifactId>selenium-java</artifactId></dependency>
+    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId></dependency>
+  </dependencies>
+</project>

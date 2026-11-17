@@ -1,0 +1,5 @@
+{
+  "name": "fixture-qa-nao-instalar",
+  "private": true,
+  "devDependencies": {"cypress": "0.0.0-fixture", "typescript": "0.0.0-fixture"}
+}

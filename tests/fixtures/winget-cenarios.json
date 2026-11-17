@@ -1,0 +1,9 @@
+{
+  "aviso": "Saídas inteiramente fictícias para testar interpretação. Não representam o computador.",
+  "lista_git": ["Name Id Version", "----------------------", "Git Git.Git 2.0.0"],
+  "lista_git_disponivel": ["Name Id Version Available", "----------------------", "Git Git.Git 2.0.0 3.0.0"],
+  "upgrades_com_git": ["Name Id Version Available", "----------------------", "Git Git.Git 2.0.0 3.0.0"],
+  "upgrades_sem_git": ["Name Id Version Available", "----------------------", "Outro Outro.Produto 1.0.0 2.0.0"],
+  "lista_id_semelhante": ["Git Git.Git.OutraVariante 2.0.0"],
+  "lista_versao_desconhecida": ["Git Git.Git Unknown"]
+}

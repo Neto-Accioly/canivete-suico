@@ -1,0 +1,9 @@
+{
+  "projeto": "FIXTURE FICTICIA",
+  "perfis": {"essencial": "Base fictícia", "apis-bancos": "Trilha fictícia", "avancado": "Complementos fictícios"},
+  "ferramentas": [
+    {"nome":"Git","categoria":"CLI","winget_id":"Git.Git","metodo_instalacao":"winget","obrigatoriedade":"opcional","descricao":"Fixture","perfis":["essencial","avancado"]},
+    {"nome":"Node.js LTS","categoria":"CLI","winget_id":"OpenJS.NodeJS.LTS","metodo_instalacao":"winget","obrigatoriedade":"opcional","descricao":"Fixture","perfis":["essencial"]},
+    {"nome":"Manual fictício","categoria":"Projeto","winget_id":null,"metodo_instalacao":"manual_site_oficial","obrigatoriedade":"opcional","descricao":"Fixture","perfis":["apis-bancos"]}
+  ]
+}

@@ -21,3 +21,19 @@ node_modules/
 test-results/
 playwright-report/
 coverage/
+
+# Evidencias brutas podem conter usuario, caminhos, inventario e mensagens locais.
+# Versionar somente orientacoes e resumos JSON revisados, nunca logs/transcricoes.
+# Preservar originais localmente; nao usar git add -f para contornar estas regras.
+/evidencias/*
+!/evidencias/README.md
+!/evidencias/resumos/
+/evidencias/resumos/*
+!/evidencias/resumos/README.md
+!/evidencias/resumos/*.json
+
+# Saidas locais adicionais de QA (fixtures e documentos continuam versionados).
+*.trx
+*.clixml
+TestResult.xml
+TestResults.xml
