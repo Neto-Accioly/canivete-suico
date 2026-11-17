@@ -40,7 +40,7 @@ Os resumos antigos revisados recebem classificação **retrospectiva na cópia d
 - **Testes de funções:** verificam catálogo, seleção, interpretação de evidências, planejamento e bloqueios com entradas controladas.
 - **Fluxo principal instrumentado:** um processo filho executa uma cópia em memória do bloco principal com dependências falsas. Comprova ramificações e códigos de saída, mas não a instalação real nem a passagem de arrays nativos diretamente para `powershell.exe -File instalar.ps1`.
 - **Consultas reais anteriores:** os resultados disponíveis na conversa são observações da sessão, não artefatos preservados no repositório. Não são reexecutados por esta suíte nem convertidos automaticamente em execução `REAL_CONTROLADO` ou `MANUAL` comprovada.
-- **Instalação real:** continua não executada. Interface do instalador, contratos, UAC, reinicialização e sucesso em um Windows limpo não foram comprovados.
+- **Instalação real pela rotina `-Aplicar`:** continua não validada. Em 17/11/2026, o usuário relatou instalação bem-sucedida por WinGet direto, registrada separadamente como `REAL_CONTROLADO` / `RELATADO`; isso não comprova o fluxo de confirmação, bloqueios ou verificação da rotina, nem UI/EULA/UAC/reboot.
 
 `INSTALAR` no plano não significa programa instalado. `ATUALIZAR` é recomendação simulada; nenhum upgrade real é implementado. `MANTER` significa que a consulta reconhecida não listou atualização, sem garantir a versão mais recente de todas as fontes. `REVISAR` bloqueia aplicação quando faltam evidências.
 
@@ -71,6 +71,14 @@ Estados documentais:
 | ERRO DE INFRAESTRUTURA | O ambiente/runner impediu obter um resultado utilizável; não contar como aprovação. |
 
 ## Manutenção durante desenvolvimento
+
+### Cenário de PATH após instalação direta
+
+No [relato de 17/11/2026](historico-execucoes.md), o inventário indicava Node `26.13.1` e a chamada por caminho completo retornava `v26.13.1`, embora `node` e `npm.cmd` ainda não fossem encontrados pelo PATH da sessão existente. Após atualização **somente da sessão**, as chamadas curtas funcionaram; npm retornou `11.20.0` e `Get-Command node` apontou `C:\Program Files\nodejs\node.exe`.
+
+Esse comportamento é compatível com uma sessão que ainda mantém o PATH anterior à instalação. A causa específica não foi medida independentemente. Distinguir instalação/inventário, funcionamento por caminho completo e descoberta no PATH evita interpretar automaticamente “comando não encontrado” como “programa não instalado”. O comando exato de ajuste não foi fornecido e não foi reconstruído como evidência. Não foi comprovado comportamento em novo terminal ou alteração persistente do PATH.
+
+O tipo `REAL_CONTROLADO` descreve o procedimento real informado; `RELATADO` descreve a força da evidência recebida. Nenhuma verificação real foi repetida nesta documentação. Os testes QA-033 a QA-035 continuam mocks da verificação e do PATH temporário, não provas dessa instalação.
 
 Para cada mudança funcional: atualize casos e fixtures pertinentes, execute a suíte segura, registre a execução (inclusive falhas), vincule defeitos reproduzidos e só então atualize o estado da correção. Não reutilize um relatório antigo como evidência de um novo hash de produção. O `AGENTS.md` torna esse fluxo parte das orientações do repositório.
 

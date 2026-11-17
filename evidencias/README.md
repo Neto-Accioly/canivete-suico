@@ -17,3 +17,5 @@ Resumos revisados antigos recebem o rótulo retrospectivamente apenas na cópia 
 `execucoes/` e outros arquivos brutos são ignorados. Caminhos, erros de teste, relatórios XML, screenshots, inventário e transcrições podem conter dados pessoais. Não use `git add -f` para publicá-los. O `.gitignore` não remove segredos já rastreados nem substitui revisão humana.
 
 Uma fixture não é evidência. Um resumo comprova o resultado observado para os hashes indicados, no ambiente indicado, com mocks; não comprova programas instalados. Mantenha a ligação no [histórico](../docs/historico-execucoes.md).
+
+O [registro de Node via WinGet direto](resumos/20261117-node-lts-winget-direto-relato.json) é uma exceção documental aos resumos Pester: tipo `REAL_CONTROLADO`, grau `RELATADO`, fonte mensagem do usuário. Não possui XML/log anexado, commit ou código de saída comprovados; não inventar esses dados. Não valida `-Aplicar` e não altera os 43 casos `MOCKADO`. O caminho genérico do sistema foi normalizado no JSON; o histórico preserva o caminho informado, sem nome de usuário.

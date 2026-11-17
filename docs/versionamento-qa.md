@@ -41,11 +41,14 @@ evidencias/resumos/20261117-154901824-e02807e8.json
 evidencias/resumos/20261117-154951182-4a307157.json
 evidencias/resumos/20261117-155843943-58008942.json
 evidencias/resumos/20261117-161114058-8591ed63.json
+evidencias/resumos/20261117-node-lts-winget-direto-relato.json
 ```
 
 Os caminhos `C:\fixture` nos testes são sintéticos; exemplos `C:\Dev` no README são genéricos, sem nome pessoal. As fixtures são dados fictícios e não executáveis. Resumos incluem somente ambiente mínimo, casos e hashes; não incluem PATH, contas, máquina, erros brutos ou stacktraces. Logs brutos e originais não fazem parte desta lista.
 
 Após esta preparação, a padronização de tipos modificou o gerador e o teste QA-001. A execução mais recente é `20261117-161114058-8591ed63`, **MOCKADO, 43/43**. Os resumos antigos preservam os resultados históricos, com classificação retrospectiva somente nas cópias revisadas. Não usar seus hashes para afirmar que as fontes novas foram testadas naquela data; consultar o histórico e o resumo novo.
+
+O registro posterior de WinGet direto de 17/11/2026 é `REAL_CONTROLADO` com grau `RELATADO`, baseado na mensagem do usuário; não possui log bruto anexado e não comprova a execução de `-Aplicar`. É um registro externo à suíte Pester e não altera os 43 testes.
 
 ## Fora deste lote
 

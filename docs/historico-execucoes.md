@@ -39,11 +39,37 @@ O runner não foi reexecutado nesta preparação: XML/JSON consistentes, 43 caso
 
 Essa afirmação descreve a preparação anterior. Na padronização posterior, o gerador e o teste QA-001 foram alterados; a nova execução segura `20261117-161114058-8591ed63` foi concluída como `MOCKADO`, 43/43. Não associar os hashes antigos a essas novas fontes. Os resumos derivados antigos explicitam a atribuição retrospectiva de tipo/técnicas e a divergência atual dos hashes do gerador/teste; seus resultados e originais foram preservados.
 
-## Não executado
+## Instalação direta relatada — REAL_CONTROLADO
 
-Instalação real de Node ou de qualquer outro programa; upgrades e remoções reais; confirmação física, EULA/UAC e reboot; testes em Pester 4/5 e outros ambientes. Os cenários `-Aplicar` desta suíte usam somente mocks isolados e não são evidência de instalação real.
+Registro **REAL-20261117-NODE-WINGET-DIRETO**, data informada **17/11/2026**, horário não fornecido. Tipo de execução: **REAL_CONTROLADO**; grau de comprovação: **RELATADO pelo usuário**, sem log bruto, captura ou transcrição anexados e sem reprodução independente nesta entrega. Ambiente informado anteriormente: Windows 11 Pro, VS Code e Windows PowerShell 5.1; não aferido novamente.
 
-Esses cenários têm tipo `NAO_EXECUTADO`. Não há execução `REAL_CONTROLADO` ou `MANUAL` comprovada por artefato nesta suíte; relatos e observações anteriores continuam nos seus estados documentais, sem promoção de classificação.
+O usuário informou ter executado diretamente:
+
+```powershell
+winget install --id OpenJS.NodeJS.LTS --exact --source winget --interactive --no-upgrade --skip-dependencies
+```
+
+| Etapa | Resultado informado |
+| --- | --- |
+| Instalação direta | WinGet exibiu `Successfully installed` |
+| Inventário | Node.js LTS `26.13.1` |
+| PATH inicial da sessão | `node` e `npm.cmd` não eram encontrados |
+| Verificação pelos caminhos completos | Node `v26.13.1` e npm `11.20.0` funcionaram |
+| Ajuste | Somente o PATH da sessão foi atualizado, conforme relato; comando exato não fornecido |
+| Verificação após ajuste | `node --version` e `npm.cmd --version` funcionaram, com as versões informadas acima |
+| Resolução | `Get-Command node` apontou `C:\Program Files\nodejs\node.exe` |
+
+Resultado documental: **SUCESSO_RELATADO da instalação via WinGet direto**. Não há código de saída numérico, horário, hash de instalador ou commit de origem comprovado. O PATH inicial desatualizado não equivale, neste relato, a falha de instalação: os caminhos completos funcionavam antes do ajuste da sessão. Não inferir persistência do PATH nem sucesso em novo terminal.
+
+Evidência derivada: [registro sanitizado do relato](../evidencias/resumos/20261117-node-lts-winget-direto-relato.json). Não foi fabricado relatório Pester/XML nem saída de terminal. Nenhum comando de instalação, versão ou alteração de PATH foi executado pelo assistente nesta entrega.
+
+**A rotina `scripts/instalar.ps1 -Aplicar` não foi usada nesse procedimento e continua sem validação real ponta a ponta.** Seus 43 testes automatizados permanecem `MOCKADO`, com os mesmos artefatos e resultados anteriores.
+
+## Não executado pela suíte / não validado em execução real
+
+Instalação real pela rotina `-Aplicar`; upgrades e remoções reais; confirmação física e tratamento de EULA/UAC/reboot pela rotina; testes em Pester 4/5 e outros ambientes. Os cenários `-Aplicar` desta suíte usam somente mocks isolados. O relato separado de WinGet direto não valida essas etapas do script.
+
+Esses cenários têm tipo `NAO_EXECUTADO` em execução real pela suíte. Há um registro externo `REAL_CONTROLADO` com grau `RELATADO`, acima; ele não é evidência independente nem muda a classificação dos testes automatizados.
 
 ## Modelo para nova execução
 

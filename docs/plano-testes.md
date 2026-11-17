@@ -78,14 +78,15 @@ Cada linha herda P e explicita as demais pré-condições. “Esperado” é cri
 
 ## Cenários existentes fora da execução automatizada atual
 
-Os cenários MAN abaixo são **NAO_EXECUTADO nesta suíte/entrega**. Seus nomes/observações anteriores não comprovam execução manual atual. Se efetivamente realizados no futuro, registrar o tipo `MANUAL` ou `REAL_CONTROLADO` conforme o procedimento e as evidências; nunca promover apenas por relato.
+Os cenários MAN abaixo não integram os 43 testes `MOCKADO`. O registro de WinGet direto de 17/11/2026 é `REAL_CONTROLADO` com grau `RELATADO`, separado do cenário ponta a ponta `-Aplicar`, que permanece `NAO_EXECUTADO` em ambiente real. Um relato não é reprodução independente.
 
 | ID | Pré-condições | Passos propostos | Resultado esperado | Situação |
 | --- | --- | --- | --- | --- |
 | MAN-001 | Ambiente de teste autorizado, sem instalação | Comparar `Get-Command winget`, `where.exe winget`, `winget --version` e PATH dentro/fora da sandbox, com autorização pontual | Separar descoberta, execução e restrição do ambiente | Observado anteriormente na sessão; não reexecutar pelo runner |
 | MAN-002 | Console interativo, mocks de aplicação e leitura revisados | Digitar confirmação incorreta/correta; testar entrada redirecionada | Só a frase exata permite a operação falsa; redirecionamento bloqueado | Observações anteriores sem artefato; confirmação física não automatizada |
-| MAN-003 | Ambiente descartável e autorização específica futura | Executar instalação real de Node ausente; validar EULA/UAC, versões e PATH em novo terminal | Resultado real verificável | NÃO EXECUTADO e fora da autorização desta entrega |
+| MAN-003 | Ambiente descartável e autorização específica futura | Validar instalação real pela rotina `-Aplicar`, incluindo confirmação, bloqueios, EULA/UAC, versões e PATH em novo terminal | Fluxo do script validado ponta a ponta | NAO_EXECUTADO em ambiente real; WinGet direto relatado não cobre a rotina |
 | MAN-004 | Ambiente de teste específico | Executar suite com Pester 4.x, outros Windows/arquiteturas e política de execução | Resultado registrado por ambiente | NÃO EXECUTADO |
 | MAN-005 | Programa portátil fora do PATH/Registro | Avaliar limitações de descoberta sem instalar nada | Não prometer ausência global | Limitação conhecida; sem cenário físico montado |
+| RC-001 | Conforme relato: sessão existente após instalação direta; ambiente não reproduzido | Comparar inventário, chamadas completas e chamadas curtas antes/depois de atualizar somente o PATH da sessão | Distinguir instalação funcional de descoberta de comandos | REAL_CONTROLADO / RELATADO em 17/11/2026: Node 26.13.1 e npm 11.20.0; sem log bruto e sem código de saída numérico. Ver histórico |
 
 Critério de saída: suíte sem falhas/pendências/ignorados, hashes de produção preservados, evidência vinculada ao hash testado e defeitos/limitações registrados. “Todos passaram” não transforma MAN-003 em cenário realizado.

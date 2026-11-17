@@ -1,0 +1,35 @@
+{
+  "registro": "REAL-20261117-NODE-WINGET-DIRETO",
+  "data_execucao_informada": "2026-11-17",
+  "horario": null,
+  "tipo_execucao": "REAL_CONTROLADO",
+  "grau_comprovacao": "RELATADO",
+  "fonte": "Relato do usuario nesta conversa; sem log bruto, captura ou transcricao anexados",
+  "resultado": "SUCESSO_RELATADO",
+  "via_execucao": "WinGet direto; nao scripts/instalar.ps1 -Aplicar",
+  "comando_informado": "winget install --id OpenJS.NodeJS.LTS --exact --source winget --interactive --no-upgrade --skip-dependencies",
+  "codigo_saida": null,
+  "observacoes_relatadas": {
+    "mensagem_winget": "Successfully installed",
+    "versao_no_inventario": "26.13.1",
+    "path_inicial_sessao": "node e npm.cmd nao eram encontrados",
+    "checagem_por_caminhos_completos": { "node": "v26.13.1", "npm": "11.20.0" },
+    "ajuste_path": "Somente PATH da sessao, conforme relato; comando de ajuste nao fornecido",
+    "checagem_apos_ajuste": { "node --version": "v26.13.1", "npm.cmd --version": "11.20.0" },
+    "get_command_node_normalizado": "%ProgramFiles%\nodejs\node.exe"
+  },
+  "tecnicas": ["INSTALACAO_WINGET_DIRETA", "CONSULTA_INVENTARIO", "VERIFICACAO_CLI", "AJUSTE_PATH_SESSAO"],
+  "proveniencia": {
+    "commit_origem": null,
+    "verificacao_independente_nesta_entrega": false,
+    "artefatos_brutos_fornecidos": false,
+    "caminho_normalizado": "Caminho padrao de sistema informado representado por ProgramFiles, sem dados pessoais"
+  },
+  "limites": [
+    "Registro documental do relato; nao e reproducao ou certificacao independente",
+    "Nao valida o fluxo -Aplicar, sua confirmacao, bloqueios, codigos de saida ou verificacao automatica",
+    "Sem hora, codigo de saida numerico, comando de ajuste de PATH ou hash de instalador informados",
+    "Nao comprova persistencia do PATH nem comportamento em nova sessao",
+    "Os 43 testes automatizados continuam MOCKADO e seus resultados nao foram alterados"
+  ]
+}
